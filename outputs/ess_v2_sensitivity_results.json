@@ -1,0 +1,288 @@
+{
+  "config": {
+    "basis": "national_sum (전국 합산 시계열)",
+    "policy": "policy_lookahead_noisy (합성 노이즈 주입 lookahead)",
+    "noise_levels": [
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.5,
+      0.75,
+      1.0,
+      1.5
+    ],
+    "rng_seeds": [
+      42,
+      123,
+      456
+    ],
+    "actual_std_mwh": 1181.32,
+    "model": "XGBoost (national v2) — LSTM 제외",
+    "generated_at": "2026-05-16 02:20:12"
+  },
+  "points": [
+    {
+      "noise_level": 0.0,
+      "seed": 42,
+      "self_sufficiency_rate": 79.05,
+      "self_consumption_rate": 70.81,
+      "ess_score": 49.33
+    },
+    {
+      "noise_level": 0.0,
+      "seed": 123,
+      "self_sufficiency_rate": 79.05,
+      "self_consumption_rate": 70.81,
+      "ess_score": 49.33
+    },
+    {
+      "noise_level": 0.0,
+      "seed": 456,
+      "self_sufficiency_rate": 79.05,
+      "self_consumption_rate": 70.81,
+      "ess_score": 49.33
+    },
+    {
+      "noise_level": 0.05,
+      "seed": 42,
+      "self_sufficiency_rate": 79.04,
+      "self_consumption_rate": 70.8,
+      "ess_score": 49.32
+    },
+    {
+      "noise_level": 0.05,
+      "seed": 123,
+      "self_sufficiency_rate": 79.04,
+      "self_consumption_rate": 70.8,
+      "ess_score": 49.34
+    },
+    {
+      "noise_level": 0.05,
+      "seed": 456,
+      "self_sufficiency_rate": 79.11,
+      "self_consumption_rate": 70.87,
+      "ess_score": 49.36
+    },
+    {
+      "noise_level": 0.1,
+      "seed": 42,
+      "self_sufficiency_rate": 79.06,
+      "self_consumption_rate": 70.82,
+      "ess_score": 49.21
+    },
+    {
+      "noise_level": 0.1,
+      "seed": 123,
+      "self_sufficiency_rate": 78.99,
+      "self_consumption_rate": 70.75,
+      "ess_score": 49.24
+    },
+    {
+      "noise_level": 0.1,
+      "seed": 456,
+      "self_sufficiency_rate": 79.15,
+      "self_consumption_rate": 70.92,
+      "ess_score": 49.29
+    },
+    {
+      "noise_level": 0.2,
+      "seed": 42,
+      "self_sufficiency_rate": 79.08,
+      "self_consumption_rate": 70.84,
+      "ess_score": 49.08
+    },
+    {
+      "noise_level": 0.2,
+      "seed": 123,
+      "self_sufficiency_rate": 79.04,
+      "self_consumption_rate": 70.79,
+      "ess_score": 49.12
+    },
+    {
+      "noise_level": 0.2,
+      "seed": 456,
+      "self_sufficiency_rate": 79.17,
+      "self_consumption_rate": 70.94,
+      "ess_score": 49.12
+    },
+    {
+      "noise_level": 0.3,
+      "seed": 42,
+      "self_sufficiency_rate": 79.23,
+      "self_consumption_rate": 71.0,
+      "ess_score": 49.04
+    },
+    {
+      "noise_level": 0.3,
+      "seed": 123,
+      "self_sufficiency_rate": 79.22,
+      "self_consumption_rate": 70.98,
+      "ess_score": 49.13
+    },
+    {
+      "noise_level": 0.3,
+      "seed": 456,
+      "self_sufficiency_rate": 79.24,
+      "self_consumption_rate": 71.01,
+      "ess_score": 49.07
+    },
+    {
+      "noise_level": 0.5,
+      "seed": 42,
+      "self_sufficiency_rate": 79.49,
+      "self_consumption_rate": 71.27,
+      "ess_score": 49.26
+    },
+    {
+      "noise_level": 0.5,
+      "seed": 123,
+      "self_sufficiency_rate": 79.48,
+      "self_consumption_rate": 71.26,
+      "ess_score": 49.35
+    },
+    {
+      "noise_level": 0.5,
+      "seed": 456,
+      "self_sufficiency_rate": 79.58,
+      "self_consumption_rate": 71.37,
+      "ess_score": 49.41
+    },
+    {
+      "noise_level": 0.75,
+      "seed": 42,
+      "self_sufficiency_rate": 79.69,
+      "self_consumption_rate": 71.49,
+      "ess_score": 49.47
+    },
+    {
+      "noise_level": 0.75,
+      "seed": 123,
+      "self_sufficiency_rate": 79.73,
+      "self_consumption_rate": 71.52,
+      "ess_score": 49.59
+    },
+    {
+      "noise_level": 0.75,
+      "seed": 456,
+      "self_sufficiency_rate": 79.72,
+      "self_consumption_rate": 71.51,
+      "ess_score": 49.41
+    },
+    {
+      "noise_level": 1.0,
+      "seed": 42,
+      "self_sufficiency_rate": 79.78,
+      "self_consumption_rate": 71.58,
+      "ess_score": 49.51
+    },
+    {
+      "noise_level": 1.0,
+      "seed": 123,
+      "self_sufficiency_rate": 79.81,
+      "self_consumption_rate": 71.6,
+      "ess_score": 49.6
+    },
+    {
+      "noise_level": 1.0,
+      "seed": 456,
+      "self_sufficiency_rate": 79.82,
+      "self_consumption_rate": 71.62,
+      "ess_score": 49.48
+    },
+    {
+      "noise_level": 1.5,
+      "seed": 42,
+      "self_sufficiency_rate": 79.9,
+      "self_consumption_rate": 71.7,
+      "ess_score": 49.74
+    },
+    {
+      "noise_level": 1.5,
+      "seed": 123,
+      "self_sufficiency_rate": 79.92,
+      "self_consumption_rate": 71.72,
+      "ess_score": 49.77
+    },
+    {
+      "noise_level": 1.5,
+      "seed": 456,
+      "self_sufficiency_rate": 79.95,
+      "self_consumption_rate": 71.75,
+      "ess_score": 49.7
+    }
+  ],
+  "curve": [
+    {
+      "noise_level": 0.0,
+      "ss_mean": 79.05,
+      "ss_std": 0.0,
+      "sc_mean": 70.81
+    },
+    {
+      "noise_level": 0.05,
+      "ss_mean": 79.06333333333333,
+      "ss_std": 0.032998316455369006,
+      "sc_mean": 70.82333333333334
+    },
+    {
+      "noise_level": 0.1,
+      "ss_mean": 79.06666666666668,
+      "ss_std": 0.06548960901463266,
+      "sc_mean": 70.83
+    },
+    {
+      "noise_level": 0.2,
+      "ss_mean": 79.09666666666668,
+      "ss_std": 0.0543650214343324,
+      "sc_mean": 70.85666666666667
+    },
+    {
+      "noise_level": 0.3,
+      "ss_mean": 79.23,
+      "ss_std": 0.008164965809275636,
+      "sc_mean": 70.99666666666667
+    },
+    {
+      "noise_level": 0.5,
+      "ss_mean": 79.51666666666667,
+      "ss_std": 0.0449691252107726,
+      "sc_mean": 71.3
+    },
+    {
+      "noise_level": 0.75,
+      "ss_mean": 79.71333333333334,
+      "ss_std": 0.01699673171197814,
+      "sc_mean": 71.50666666666666
+    },
+    {
+      "noise_level": 1.0,
+      "ss_mean": 79.80333333333333,
+      "ss_std": 0.016996731711973495,
+      "sc_mean": 71.60000000000001
+    },
+    {
+      "noise_level": 1.5,
+      "ss_mean": 79.92333333333333,
+      "ss_std": 0.02054804667656224,
+      "sc_mean": 71.72333333333334
+    }
+  ],
+  "xgboost": {
+    "noise_equiv": 0.2306,
+    "nmae": 0.1215,
+    "mae_mwh": 143.4769,
+    "error_std_mwh": 272.4107,
+    "self_sufficiency_rate": 79.06,
+    "self_sufficiency_on_curve": 79.14
+  },
+  "summary": {
+    "oracle_ss": 79.05,
+    "xgb_ss": 79.06,
+    "reach_pct": 100.01,
+    "ss_at_half_noise": 79.07,
+    "gain_from_50pct_accuracy": -0.07,
+    "curve_slope_pt_per_noise": 0.675
+  }
+}

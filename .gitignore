@@ -26,6 +26,8 @@ wandb/
 reference_materials/
 claude_code_prompt*.md
 CLAUDE.md
+claude_share/
+archive/
 
 # ── 로그 / 백업 / 임시 파일 ─────────────────────────────
 *.log
