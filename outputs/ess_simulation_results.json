@@ -1,0 +1,20 @@
+{
+  "naive_strategy": {
+    "curtailment_rate_pct": 47.71,
+    "shortage_count": 648,
+    "battery_cycles": 30.69,
+    "ess_score": 28.09
+  },
+  "xgb_strategy": {
+    "curtailment_rate_pct": 48.81,
+    "shortage_count": 671,
+    "battery_cycles": 28.53,
+    "ess_score": 26.66
+  },
+  "lstm_strategy": {
+    "curtailment_rate_pct": 48.76,
+    "shortage_count": 542,
+    "battery_cycles": 34.56,
+    "ess_score": 31.4
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "test1_nan_inf": {
+    "status": "PASS"
+  },
+  "test2_directional": {
+    "status": "FAIL",
+    "increase_ratio": 0.5764705882352941
+  },
+  "test3_invariance": {
+    "status": "PASS",
+    "std": 0.0
+  },
+  "test4_accuracy": {
+    "status": "PASS",
+    "xgb_mae_peak": 7.870772782688618,
+    "baseline_mae_peak": 30.8473
+  },
+  "test5_region_invariance": {
+    "status": "FAIL",
+    "n_unique_preds": 1
+  }
+}

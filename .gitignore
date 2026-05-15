@@ -1,0 +1,40 @@
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ── 가상환경 ────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── 데이터 (대용량, 별도 공유) ──────────────────────────
+# national_train_features.csv 가 161MB로 GitHub 단일 파일 한도(100MB) 초과
+data/
+national_train_ready_sample.xlsx
+
+# ── 학습된 모델 가중치 (재학습으로 생성) ────────────────
+models/
+
+# ── 실험 추적 ───────────────────────────────────────────
+wandb/
+
+# ── Claude Code 작업용 파일 (공개 제외) ─────────────────
+reference_materials/
+claude_code_prompt*.md
+CLAUDE.md
+
+# ── 로그 / 백업 / 임시 파일 ─────────────────────────────
+*.log
+*.bak
+*.tmp
+
+# ── OS / 에디터 ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

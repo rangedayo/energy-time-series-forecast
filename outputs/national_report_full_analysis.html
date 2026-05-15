@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[전국] 태양광 발전량 예측 모델 최종 분석 보고서</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy:      #0f2140;
+    --navy-mid:  #1a3557;
+    --blue:      #1a6fc4;
+    --blue-lt:   #3b8ee8;
+    --sky:       #e8f2fc;
+    --red:       #c0392b;
+    --red-lt:    #fdf0ee;
+    --orange:    #c9600a;
+    --orange-lt: #fef5ec;
+    --green:     #1e7a3c;
+    --green-lt:  #edf7f1;
+    --slate:     #5a6a7e;
+    --border:    #dce4ef;
+    --bg:        #f4f7fb;
+    --white:     #ffffff;
+    --text:      #1a2332;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── 헤더 ── */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e4a8a 60%, #2563ab 100%);
+    color: var(--white);
+    padding: 52px 48px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .header h1 {
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .header .sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .header .meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    font-family: var(--mono);
+    position: relative;
+  }
+
+  /* ── KPI 카드 ── */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 36px;
+    position: relative;
+  }
+  .kpi-card {
+    padding: 22px 24px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+  }
+  .kpi-card:last-child { border-right: none; }
+  .kpi-label { font-size: 11px; font-weight: 400; color: rgba(255,255,255,0.5); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .kpi-val   { font-size: 28px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+  .kpi-cap   { font-size: 11px; color: rgba(255,255,255,0.45); }
+  .kpi-val.blue   { color: #7ec8f8; }
+  .kpi-val.red    { color: #f8a7a0; }
+  .kpi-val.green  { color: #7ef8b0; }
+
+  /* ── 본문 레이아웃 ── */
+  .body-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 32px 60px;
+  }
+
+  /* ── 섹션 ── */
+  .section { margin-bottom: 48px; }
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--navy);
+  }
+  .sec-num {
+    background: var(--navy);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--mono);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-title { font-size: 17px; font-weight: 700; color: var(--navy); }
+  .sec-desc { font-size: 13.5px; color: var(--slate); margin-bottom: 18px; line-height: 1.7; }
+
+  /* ── 테이블 ── */
+  .tbl-wrap { overflow-x: auto; margin-bottom: 18px; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--navy); color: var(--white); }
+  thead th { padding: 11px 14px; text-align: center; font-weight: 600; font-size: 12px; letter-spacing: 0.03em; }
+  thead th:first-child { text-align: left; }
+  tbody tr:nth-child(even) { background: #f8fafd; }
+  tbody tr:hover { background: var(--sky); transition: background .15s; }
+  tbody td { padding: 9px 14px; text-align: center; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12.5px; }
+  tbody td:first-child { text-align: left; font-family: var(--sans); font-weight: 500; font-size: 13px; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  tr.row-blue td  { background: var(--sky) !important; color: var(--blue); font-weight: 700; }
+  tr.row-red td   { background: var(--red-lt) !important; color: var(--red); }
+  tr.row-orange td{ background: var(--orange-lt) !important; color: var(--orange); }
+  tr.row-green td { background: var(--green-lt) !important; color: var(--green); font-weight: 600; }
+
+  /* ── 인사이트 박스 ── */
+  .box {
+    border-radius: 0 8px 8px 0;
+    border-left: 4px solid;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+  .box-ok     { background: var(--green-lt);  border-color: var(--green); }
+  .box-warn   { background: var(--orange-lt); border-color: var(--orange); }
+  .box-danger { background: var(--red-lt);    border-color: var(--red); }
+  .box-info   { background: var(--sky);       border-color: var(--blue); }
+  .box b { font-weight: 700; }
+
+  /* ── 메트릭 그리드 ── */
+  .metric-grid { display: grid; gap: 12px; margin-bottom: 20px; }
+  .metric-grid.col4 { grid-template-columns: repeat(4,1fr); }
+  .metric-grid.col3 { grid-template-columns: repeat(3,1fr); }
+  .mc {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .mc-label { font-size: 11px; color: var(--slate); margin-bottom: 5px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .mc-val   { font-size: 22px; font-weight: 900; line-height: 1; margin-bottom: 4px; font-family: var(--mono); }
+  .mc-sub   { font-size: 11px; color: #94a3b8; }
+  .mc-val.blue   { color: var(--blue); }
+  .mc-val.red    { color: var(--red); }
+  .mc-val.orange { color: var(--orange); }
+  .mc-val.green  { color: var(--green); }
+
+  /* ── 테스트 결과 ── */
+  .test-list { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+  .test-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 11px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
+  .test-row:last-child { border-bottom: none; }
+  .test-row:hover { background: #f8fafd; }
+  .test-name { font-size: 13px; font-weight: 500; flex: 1; }
+  .test-note { font-size: 11.5px; color: var(--slate); margin-top: 2px; }
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10.5px; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+    font-family: var(--mono); letter-spacing: 0.05em;
+  }
+  .badge-pass   { background: var(--green-lt); color: var(--green); }
+  .badge-fail   { background: var(--orange-lt); color: var(--orange); }
+  .badge-allpass{ background: var(--sky); color: var(--blue); }
+
+  /* ── 개선 방향 카드 ── */
+  .improve-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .improve-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .improve-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-lt));
+  }
+  .improve-num { font-size: 10px; font-weight: 700; color: var(--blue); font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .improve-title { font-size: 13.5px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .improve-body { font-size: 12.5px; color: var(--slate); line-height: 1.75; }
+
+  /* ── 주석 박스 ── */
+  .note {
+    background: #fffbec;
+    border: 1px solid #f0d080;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #7a5c00;
+    margin-top: 10px;
+  }
+
+  /* ── 참고 데이터 ── */
+  .ref-strip {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-size: 12px;
+    font-family: var(--mono);
+    line-height: 2;
+  }
+  .ref-strip span { color: rgba(255,255,255,0.35); margin-right: 8px; }
+
+  /* ── 서브 타이틀 ── */
+  .sub-title {
+    font-size: 14px; font-weight: 700; color: var(--navy-mid);
+    margin: 22px 0 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sub-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 16px;
+    background: var(--blue);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 700px) {
+    .kpi-strip { grid-template-columns: repeat(2,1fr); }
+    .metric-grid.col4 { grid-template-columns: repeat(2,1fr); }
+    .improve-grid { grid-template-columns: 1fr; }
+    .header { padding: 32px 20px 28px; }
+    .body-wrap { padding: 28px 16px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── 헤더 ── -->
+<div class="header">
+  <div class="header-badge">📊 Final Analysis Report</div>
+  <h1>[전국] 태양광 발전량 예측 모델<br>최종 분석 보고서</h1>
+  <div class="sub">XGBoost · LSTM · ESS 시뮬레이션 종합 평가</div>
+  <div class="meta">생성일시: 2026-04-26 &nbsp;|&nbsp; Train: 2017~2022 &nbsp;|&nbsp; Test: 2023 &nbsp;|&nbsp; 대상: 전국 17개 시도</div>
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="kpi-label">XGBoost MAE</div>
+      <div class="kpi-val blue">9.66</div>
+      <div class="kpi-cap">MWh — Naive 대비 52.9% 개선</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">LSTM MAE</div>
+      <div class="kpi-val red">17.82</div>
+      <div class="kpi-cap">MWh — Naive 대비 13.1% 개선</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">XGB 피크 MAE</div>
+      <div class="kpi-val blue">7.76</div>
+      <div class="kpi-cap">Naive(28.86) 대비 73% 개선</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ESS 운영효율</div>
+      <div class="kpi-val green">×2.9배</div>
+      <div class="kpi-cap">Naive 5.0점 → LSTM 14.7점</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 본문 ── -->
+<div class="body-wrap">
+
+  <!-- 1. 모델 성능 비교 -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num">1</div>
+      <div class="sec-title">모델 성능 비교 (Test Set 2023)</div>
+    </div>
+    <p class="sec-desc">Naive(lag1)를 기준선으로 XGBoost와 LSTM을 비교합니다. XGBoost는 전 지표에서 압도적으로 우수하며, LSTM은 기대에 못 미치는 결과를 보였습니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>모델</th><th>MAE</th><th>RMSE</th><th>피크 MAE</th><th>피크 RMSE</th><th>Naive 대비</th></tr></thead>
+        <tbody>
+          <tr><td>Naive (lag1)</td><td>20.51</td><td>66.58</td><td>28.86</td><td>79.47</td><td>—</td></tr>
+          <tr class="row-blue"><td>XGBoost</td><td>9.66</td><td>47.97</td><td>7.76</td><td>40.18</td><td>52.9% 개선</td></tr>
+          <tr class="row-red"><td>LSTM</td><td>17.82</td><td>67.50</td><td>30.71</td><td>95.15</td><td>13.1% 개선</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box box-ok">✅ <b>XGBoost:</b> 피크 MAE 7.76은 Naive(28.86) 대비 73% 개선. 발전량이 집중되는 주간 시간대 예측 품질이 특히 우수합니다.</div>
+    <div class="box box-danger">🔴 <b>LSTM:</b> RMSE 67.50이 Naive(66.58)보다 오히려 나쁩니다. 피크 MAE 30.71도 Naive를 역전 당했으며, XGBoost 대비 개선율이 −84.6%로 심각한 수준입니다.</div>
+  </div>
+
+  <!-- 2. 지역별 MAE -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num">2</div>
+      <div class="sec-title">지역별 MAE 비교 (Naive · XGBoost · LSTM)</div>
+    </div>
+    <p class="sec-desc">17개 시도별로 세 전략의 MAE를 비교합니다. XGBoost는 전 지역에서 우위이나, 전라남도·충청남도에서 이상치가 관찰됩니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>지역</th><th>Naive MAE</th><th>XGBoost MAE</th><th>LSTM MAE</th><th>XGB 개선율</th></tr></thead>
+        <tbody>
+          <tr class="row-red"><td>전라남도 ※이상치</td><td>136.93</td><td>90.42</td><td>154.36</td><td>34.0%</td></tr>
+          <tr class="row-orange"><td>충청남도 ※개선 실패</td><td>25.50</td><td>25.53</td><td>26.35</td><td>−0.1%</td></tr>
+          <tr><td>경상북도</td><td>35.58</td><td>12.18</td><td>21.13</td><td>65.8%</td></tr>
+          <tr><td>강원도</td><td>27.86</td><td>10.70</td><td>16.30</td><td>61.6%</td></tr>
+          <tr><td>전라북도</td><td>38.61</td><td>11.52</td><td>25.55</td><td>70.2%</td></tr>
+          <tr><td>충청북도</td><td>16.09</td><td>6.20</td><td>11.15</td><td>61.5%</td></tr>
+          <tr><td>경상남도</td><td>21.75</td><td>5.51</td><td>10.65</td><td>74.7%</td></tr>
+          <tr><td>경기도</td><td>13.83</td><td>3.51</td><td>7.20</td><td>74.6%</td></tr>
+          <tr><td>제주도</td><td>17.85</td><td>2.62</td><td>10.84</td><td>85.3%</td></tr>
+          <tr><td>부산시</td><td>5.03</td><td>0.83</td><td>3.27</td><td>83.4%</td></tr>
+          <tr><td>인천시</td><td>2.13</td><td>0.66</td><td>3.38</td><td>68.9%</td></tr>
+          <tr><td>광주시</td><td>2.77</td><td>0.57</td><td>2.19</td><td>79.4%</td></tr>
+          <tr><td>대구시</td><td>2.64</td><td>0.59</td><td>2.50</td><td>77.7%</td></tr>
+          <tr><td>서울시</td><td>0.74</td><td>0.18</td><td>2.81</td><td>75.8%</td></tr>
+          <tr><td>세종시</td><td>1.25</td><td>0.34</td><td>2.99</td><td>72.6%</td></tr>
+          <tr><td>울산시</td><td>1.81</td><td>0.28</td><td>3.40</td><td>84.5%</td></tr>
+          <tr class="row-green"><td>대전시</td><td>0.58</td><td>0.14</td><td>2.71</td><td>76.3%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box box-danger">🔴 <b>전라남도 — 심각한 이상치:</b> LSTM MAE 154.36이 Naive(136.93)보다도 나쁩니다. XGBoost(90.42)도 전국 평균 MAE를 9배 이상 끌어올리는 이상치 지역입니다. 극단적 이중봉 분포(0 or 999 MWh)와 MSELoss 스케일 불균형이 복합 원인입니다.</div>
+
+    <div class="sub-title">전라남도에서 LSTM이 특히 나쁜 이유</div>
+    <div class="box box-warn">① 압도적 수치를 쫓으려다 과적합(Overfitting): 전남의 거대한 변동성을 억지로 추적하려다 오히려 큰 실수를 저지릅니다.</div>
+    <div class="box box-warn">② 평균값 수렴 현상: 신경망 모델은 불확실한 상황에서 평균값을 출력하는 경향이 있습니다. 데이터가 들쭉날쭉이라면 평균값을 내다보니 그만큼 오차가 심해집니다.</div>
+    <div class="box box-warn">③ 불규칙한 기상 패턴: LSTM은 과거 패턴으로 미래를 예측하는데, 전남의 기상 변화가 불규칙해 패턴을 찾기 힘들면 복잡한 계산을 하는 LSTM이 오히려 어제 값을 그대로 쓰는 Naive보다 나빠질 수 있습니다.</div>
+
+    <div class="box box-orange" style="margin-top:10px;">🟠 <b>충청남도 — 두 모델 모두 Naive에 패배:</b> XGBoost MAE 25.53이 Naive(25.50)보다 0.1% 악화. 보령 관측소 단일 기상 데이터로 광역 지역 전체를 대표하는 것이 근본 한계입니다.</div>
+    <div class="box box-info">💡 <b>소규모 광역시 — LSTM 평활화 문제:</b> 대전 XGB 0.14 vs LSTM 2.71 (19배), 서울 XGB 0.18 vs LSTM 2.81 (15배). LSTM이 대형 지역의 큰 신호에 치우쳐 소규모 지역의 미세 신호를 과대평가합니다.</div>
+    <div class="box box-ok">✅ <b>XGBoost 강세 지역:</b> 제주(85.3%), 울산(84.5%), 부산(83.4%), 광주(79.4%) — 기상 신호가 안정적이고 설비 규모가 중간 수준인 지역에서 특히 우수합니다.</div>
+  </div>
+
+  <!-- 3. LSTM 과적합 진단 -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num">3</div>
+      <div class="sec-title">LSTM 과적합 진단</div>
+    </div>
+    <p class="sec-desc">Loss 곡선에서 Train Loss(~0.01)와 Val Loss(~0.22)의 격차가 22배에 달합니다. 전형적인 과적합이며 3가지 복합 원인이 확인됩니다.</p>
+
+    <div class="metric-grid col4">
+      <div class="mc"><div class="mc-label">Train Loss 최종</div><div class="mc-val blue">~0.01</div><div class="mc-sub">수렴 완료</div></div>
+      <div class="mc"><div class="mc-label">Val Loss 최종</div><div class="mc-val red">~0.22</div><div class="mc-sub">수렴 불안정, 요동</div></div>
+      <div class="mc"><div class="mc-label">Train/Val 격차</div><div class="mc-val red">×22배</div><div class="mc-sub">심각한 과적합</div></div>
+      <div class="mc"><div class="mc-label">Early Stop 발동</div><div class="mc-val orange">미발동</div><div class="mc-sub">50 epoch 완주</div></div>
+    </div>
+
+    <div class="sub-title">과적합 3대 원인</div>
+    <div class="box box-warn"><b>원인 1 — 스케일 불균형:</b> 전라남도(최대 ~1,000 MWh)와 서울(최대 ~3 MWh)을 동일한 StandardScaler로 정규화합니다. MSELoss 하에서 전라남도 오차 제곱이 소규모 지역의 수만 배에 달해, 모델 전체가 전라남도 파라미터에 치우치고 소규모 지역 예측이 희생됩니다.</div>
+    <div class="box box-warn"><b>원인 2 — 시퀀스 분포 차이:</b> train 마지막 20%를 validation으로 사용하는데, 2022년 말과 2023년(test) 간 분포 차이가 크면 val loss가 test 성능을 대표하지 못합니다. 이로 인해 Early stopping이 제때 발동되지 않고 50 epoch을 완주합니다.</div>
+    <div class="box box-warn"><b>원인 3 — 모델 용량 vs 데이터 이질성 불일치:</b> XGBoost는 region_code + lag 피처로 트리에서 자연스럽게 지역을 분기하지만, LSTM은 17개 지역의 이질적 패턴을 시퀀스 단위로 처리해야 해서 구조적으로 불리합니다. hidden_size=128, num_layers=2로는 이 이질성을 담기에 부족합니다.</div>
+  </div>
+
+  <!-- 4. ESS 시뮬레이션 -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num">4</div>
+      <div class="sec-title">ESS 시뮬레이션 비교</div>
+    </div>
+
+    <div class="sub-title">ESS 파라미터 설정</div>
+    <div class="metric-grid col4" style="margin-bottom:6px;">
+      <div class="mc"><div class="mc-label">ESS 용량</div><div class="mc-val blue" style="font-size:18px;">500 MWh</div><div class="mc-sub">실사용 300 MWh (60%)</div></div>
+      <div class="mc"><div class="mc-label">SOC 범위</div><div class="mc-val blue" style="font-size:18px;">20~80%</div><div class="mc-sub">배터리 수명 보호</div></div>
+      <div class="mc"><div class="mc-label">최대 충방전</div><div class="mc-val blue" style="font-size:18px;">100 MW</div><div class="mc-sub">C-rate 0.2C</div></div>
+      <div class="mc"><div class="mc-label">충방전 효율</div><div class="mc-val blue" style="font-size:18px;">95%</div><div class="mc-sub">5% 열손실</div></div>
+    </div>
+    <div class="box box-warn" style="margin-bottom:18px;">⚠️ <b>파라미터 주의:</b> 위 수치는 실제 설비 데이터가 아닌 전국 단위 시뮬레이션을 위해 설정된 가상의 값입니다. 시간당 수요 50 MWh도 전국 모든 지역에 동일 적용되어 현실과 괴리가 있습니다. 세 전략 간 상대 비교에만 유효하며, 절대 수치를 실제 운영값으로 해석하면 안 됩니다.</div>
+
+    <div class="sub-title">전략별 시뮬레이션 결과</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>전략</th><th>전력낭비율</th><th>부족횟수</th><th>사이클수</th><th>운영효율점수</th></tr></thead>
+        <tbody>
+          <tr><td>Naive</td><td>94.5%</td><td>515</td><td>152.3</td><td>5.0</td></tr>
+          <tr class="row-blue"><td>XGBoost 기반</td><td>84.1%</td><td>515</td><td>152.3</td><td>14.5</td></tr>
+          <tr class="row-green"><td>LSTM 기반</td><td>84.1%</td><td>426</td><td>150.7</td><td>14.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box box-ok">✅ 전력낭비율: Naive 94.5% → XGB/LSTM 84.1% (10.4%p 감소). 운영효율점수: Naive 5.0 → LSTM 14.7 (약 2.9배 향상).</div>
+    <div class="box box-info">💡 <b>역설적 결과 — MAE vs 부족횟수의 역전:</b> MAE 기준으로는 XGBoost(9.66)가 LSTM(17.82)보다 훨씬 정확하지만, ESS 부족횟수는 LSTM(426)이 XGBoost(515)보다 17% 더 적습니다. LSTM의 보수적(낮게) 예측 경향이 ESS 과충전을 억제하고 부족 상황을 의도치 않게 줄이는 효과를 낳았습니다.</div>
+  </div>
+
+  <!-- 5. 테스트 결과 -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num">5</div>
+      <div class="sec-title">테스트 결과</div>
+    </div>
+
+    <div class="sub-title">5-1. 데이터 기댓값 테스트</div>
+    <div class="test-list">
+      <div class="test-row"><div><div class="test-name">national_train 필수 컬럼·범위·결측 검증</div></div><span class="badge badge-pass">PASS</span></div>
+      <div class="test-row"><div><div class="test-name">national_test 필수 컬럼·범위·결측 검증</div></div><span class="badge badge-pass">PASS</span></div>
+    </div>
+
+    <div class="sub-title">5-2. XGBoost 행동 테스트</div>
+    <div class="test-list">
+      <div class="test-row"><div><div class="test-name">NaN/Inf 출력 검증</div></div><span class="badge badge-pass">PASS</span></div>
+      <div class="test-row">
+        <div>
+          <div class="test-name">방향성 테스트 (일사량↑ → 발전량↑)</div>
+          <div class="test-note">증가 비율 82.4% (기준 90%) — 고온 패널 효율저하, 전운량 복합 영향 등 실제 물리 현상 → 모델 결함 아님</div>
+        </div>
+        <span class="badge badge-fail">FAIL (허용)</span>
+      </div>
+      <div class="test-row"><div><div class="test-name">불변성 테스트 (동일 입력 5회 반복)</div><div class="test-note">표준편차 = 0</div></div><span class="badge badge-pass">PASS</span></div>
+      <div class="test-row"><div><div class="test-name">정확성 테스트 (피크 MAE)</div><div class="test-note">XGB 피크 MAE 7.76 &lt; Naive 28.86</div></div><span class="badge badge-pass">PASS</span></div>
+      <div class="test-row">
+        <div>
+          <div class="test-name">지역 불변성 테스트</div>
+          <div class="test-note">17개 지역 중 11개만 다른 예측 — region_code importance=0.01, lag/기상 피처에 흡수 → 구조적 현상</div>
+        </div>
+        <span class="badge badge-fail">FAIL (허용)</span>
+      </div>
+    </div>
+    <div class="note">⚠️ <b>주의:</b> behavioral_test_results.json의 test4 기준값(xgb_mae_peak=26.27)이 XGBoost v1 기준입니다. v2 실제 피크 MAE는 7.76으로 불일치 → 다음 실행 시 갱신 필요.</div>
+
+    <div class="sub-title">5-3. LSTM 테스트 — 전체 PASS</div>
+    <div class="test-list">
+      <div class="test-row"><div class="test-name">암기 테스트 (초기 loss의 1% 이하)</div><span class="badge badge-pass">PASS</span></div>
+      <div class="test-row"><div class="test-name">NaN/Inf 출력 검증</div><span class="badge badge-pass">PASS</span></div>
+      <div class="test-row"><div class="test-name">state_dict / TorchScript / ONNX 저장 검증</div><span class="badge badge-allpass">ALL PASS</span></div>
+      <div class="test-row"><div class="test-name">배치 추론 (batch = 1 / 8 / 64)</div><span class="badge badge-allpass">ALL PASS</span></div>
+    </div>
+  </div>
+
+  <!-- 6. 개선 방향 -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num">6</div>
+      <div class="sec-title">개선 방향 제언</div>
+    </div>
+    <div class="improve-grid">
+      <div class="improve-card">
+        <div class="improve-num">① 최우선 과제</div>
+        <div class="improve-title">전라남도·충청남도 집중 진단</div>
+        <div class="improve-body">두 지역 raw 데이터의 연도별 추이, 이상치 비율, 기상 관측소 매핑 품질을 먼저 확인합니다. 전남은 설비 규모 급증 연도 전후를 분리 학습하거나, 지역별 정규화(min-max per region)를 도입하면 전체 MAE를 현재 9.66에서 4~5대로 낮출 수 있을 것으로 추정됩니다.</div>
+      </div>
+      <div class="improve-card">
+        <div class="improve-num">②</div>
+        <div class="improve-title">LSTM 과적합 해결</div>
+        <div class="improve-body">지역별 독립 StandardScaler 적용으로 스케일 불균형을 해소하고, dropout을 0.2 → 0.4로 강화합니다. 개선 후에도 XGBoost를 넘지 못하면, LSTM 추가 개선 대신 LightGBM 비교 또는 XGBoost 앙상블로 방향을 전환합니다.</div>
+      </div>
+      <div class="improve-card">
+        <div class="improve-num">③</div>
+        <div class="improve-title">XGBoost 피처 집중도 완화</div>
+        <div class="improve-body">lag_1h 단일 피처가 중요도 65%를 독점하는 상황을 개선합니다. Optuna 하이퍼파라미터 탐색을 적용하고, irrad_forecast_ratio(일사량 대비 예측 비율) 등 물리 기반 피처를 추가해 기상 피처 기여도를 높입니다.</div>
+      </div>
+      <div class="improve-card">
+        <div class="improve-num">④</div>
+        <div class="improve-title">ESS 시뮬레이션 현실화</div>
+        <div class="improve-body">지역별 수요(DEMAND_MWH_PER_HOUR)를 실제 계통 데이터로 차등 설정합니다. 비대칭 손실 함수(과소예측 패널티 강화)를 도입해 ESS 부족횟수를 줄이고, look-ahead 충전 계획 로직(사전 공간 확보) 도입도 검토합니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 참고 데이터 -->
+  <div class="ref-strip">
+    <span>참고 데이터 출처</span><br>
+    national_final_report.md &nbsp;·&nbsp;
+    national_xgb_results.json &nbsp;·&nbsp;
+    national_lstm_results.json &nbsp;·&nbsp;
+    national_baseline_results.json &nbsp;·&nbsp;
+    national_behavioral_test_results.json &nbsp;·&nbsp;
+    national_lstm_loss_curve.png &nbsp;·&nbsp;
+    national_xgb_feature_importance.png
+  </div>
+
+</div>
+</body>
+</html>

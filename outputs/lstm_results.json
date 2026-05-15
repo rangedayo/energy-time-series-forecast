@@ -1,0 +1,8 @@
+{
+  "MAE": 13.2842,
+  "RMSE": 23.0048,
+  "MAE_peak": 31.3741,
+  "RMSE_peak": 37.4487,
+  "memorization_test": "PASS",
+  "nan_inf_check": "PASS"
+}

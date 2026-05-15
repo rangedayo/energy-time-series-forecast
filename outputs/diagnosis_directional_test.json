@@ -1,0 +1,384 @@
+{
+  "meta": {
+    "timestamp": "2026-05-12T21:07:22.077093",
+    "test_rows": 96437,
+    "daytime_rows": 51183,
+    "n_regions": 17,
+    "n_features": 24
+  },
+  "diagnosis1_by_region": {
+    "강원도": {
+      "n_samples": 100,
+      "increase_ratio": 0.49,
+      "mean_diff": 0.2879924476146698
+    },
+    "경기도": {
+      "n_samples": 100,
+      "increase_ratio": 0.47,
+      "mean_diff": 0.07698120921850204
+    },
+    "경상남도": {
+      "n_samples": 100,
+      "increase_ratio": 0.46,
+      "mean_diff": 0.21772031486034393
+    },
+    "경상북도": {
+      "n_samples": 100,
+      "increase_ratio": 0.64,
+      "mean_diff": 0.7471047043800354
+    },
+    "광주시": {
+      "n_samples": 100,
+      "increase_ratio": 0.59,
+      "mean_diff": 0.15116533637046814
+    },
+    "대구시": {
+      "n_samples": 100,
+      "increase_ratio": 0.63,
+      "mean_diff": 0.15802881121635437
+    },
+    "대전시": {
+      "n_samples": 100,
+      "increase_ratio": 0.75,
+      "mean_diff": 0.20582479238510132
+    },
+    "부산시": {
+      "n_samples": 100,
+      "increase_ratio": 0.51,
+      "mean_diff": 0.095707967877388
+    },
+    "서울시": {
+      "n_samples": 100,
+      "increase_ratio": 0.71,
+      "mean_diff": 0.21025341749191284
+    },
+    "세종시": {
+      "n_samples": 100,
+      "increase_ratio": 0.66,
+      "mean_diff": 0.18987126648426056
+    },
+    "울산시": {
+      "n_samples": 100,
+      "increase_ratio": 0.7,
+      "mean_diff": 0.1915275603532791
+    },
+    "인천시": {
+      "n_samples": 100,
+      "increase_ratio": 0.67,
+      "mean_diff": 0.1506052017211914
+    },
+    "전라남도": {
+      "n_samples": 100,
+      "increase_ratio": 0.68,
+      "mean_diff": 8.287283897399902
+    },
+    "전라북도": {
+      "n_samples": 100,
+      "increase_ratio": 0.57,
+      "mean_diff": 0.7825906872749329
+    },
+    "제주도": {
+      "n_samples": 100,
+      "increase_ratio": 0.41,
+      "mean_diff": 0.1348637193441391
+    },
+    "충청남도": {
+      "n_samples": 100,
+      "increase_ratio": 0.65,
+      "mean_diff": 3.442486047744751
+    },
+    "충청북도": {
+      "n_samples": 100,
+      "increase_ratio": 0.35,
+      "mean_diff": 0.03587121143937111
+    }
+  },
+  "diagnosis2_by_hour": {
+    "아침 (6-9시)": {
+      "n_samples": 500,
+      "increase_ratio": 0.772,
+      "mean_diff": 1.4414142370224,
+      "mean_irrad_scaled": 0.36815333333333333
+    },
+    "오전 (10-11시)": {
+      "n_samples": 500,
+      "increase_ratio": 0.476,
+      "mean_diff": 0.230221226811409,
+      "mean_irrad_scaled": 1.4882800000000003
+    },
+    "한낮 (12-14시)": {
+      "n_samples": 500,
+      "increase_ratio": 0.254,
+      "mean_diff": 0.5547524690628052,
+      "mean_irrad_scaled": 2.0268999999999995
+    },
+    "오후 (15-17시)": {
+      "n_samples": 500,
+      "increase_ratio": 0.574,
+      "mean_diff": 2.0560874938964844,
+      "mean_irrad_scaled": 1.31266
+    },
+    "저녁 (18-19시)": {
+      "n_samples": 500,
+      "increase_ratio": 0.886,
+      "mean_diff": 2.858393669128418,
+      "mean_irrad_scaled": 0.39076
+    }
+  },
+  "diagnosis3_sampling_stability": {
+    "seeds": [
+      {
+        "seed": 0,
+        "increase_ratio": 0.5411764705882353
+      },
+      {
+        "seed": 1,
+        "increase_ratio": 0.5352941176470588
+      },
+      {
+        "seed": 2,
+        "increase_ratio": 0.6470588235294118
+      },
+      {
+        "seed": 3,
+        "increase_ratio": 0.5058823529411764
+      },
+      {
+        "seed": 4,
+        "increase_ratio": 0.5294117647058824
+      },
+      {
+        "seed": 5,
+        "increase_ratio": 0.5882352941176471
+      },
+      {
+        "seed": 6,
+        "increase_ratio": 0.5882352941176471
+      },
+      {
+        "seed": 7,
+        "increase_ratio": 0.5588235294117647
+      },
+      {
+        "seed": 8,
+        "increase_ratio": 0.5058823529411764
+      },
+      {
+        "seed": 9,
+        "increase_ratio": 0.5588235294117647
+      }
+    ],
+    "mean": 0.5558823529411765,
+    "std": 0.0409447260124585,
+    "min": 0.5058823529411764,
+    "max": 0.6470588235294118
+  },
+  "diagnosis4_feature_importance": {
+    "by_gain": [
+      {
+        "feature": "lag_1h",
+        "gain": 8516634.0,
+        "weight": 2973.0,
+        "cover": 126932.03125
+      },
+      {
+        "feature": "lag_24h",
+        "gain": 1987662.0,
+        "weight": 1776.0,
+        "cover": 79609.78125
+      },
+      {
+        "feature": "rolling_mean_3h",
+        "gain": 1351201.375,
+        "weight": 1253.0,
+        "cover": 115743.3359375
+      },
+      {
+        "feature": "power_diff_1h",
+        "gain": 917653.4375,
+        "weight": 3198.0,
+        "cover": 91653.0234375
+      },
+      {
+        "feature": "power_diff_2h",
+        "gain": 799284.0625,
+        "weight": 2424.0,
+        "cover": 64877.3984375
+      },
+      {
+        "feature": "일사량",
+        "gain": 149633.640625,
+        "weight": 1817.0,
+        "cover": 15475.3330078125
+      },
+      {
+        "feature": "lag_2h",
+        "gain": 149114.296875,
+        "weight": 2069.0,
+        "cover": 106542.953125
+      },
+      {
+        "feature": "irrad_x_solar",
+        "gain": 115856.6640625,
+        "weight": 1561.0,
+        "cover": 11448.8427734375
+      },
+      {
+        "feature": "hour",
+        "gain": 87848.1015625,
+        "weight": 876.0,
+        "cover": 10302.517578125
+      },
+      {
+        "feature": "solar_altitude_proxy",
+        "gain": 64837.23046875,
+        "weight": 211.0,
+        "cover": 27846.17578125
+      },
+      {
+        "feature": "rolling_std_3h",
+        "gain": 53454.671875,
+        "weight": 1348.0,
+        "cover": 32451.49609375
+      },
+      {
+        "feature": "rolling_mean_6h",
+        "gain": 42492.7109375,
+        "weight": 986.0,
+        "cover": 50387.96484375
+      },
+      {
+        "feature": "lag_3h",
+        "gain": 17532.958984375,
+        "weight": 1417.0,
+        "cover": 54184.3515625
+      },
+      {
+        "feature": "일조",
+        "gain": 16257.38671875,
+        "weight": 483.0,
+        "cover": 1436.7183837890625
+      },
+      {
+        "feature": "전운량",
+        "gain": 8757.29296875,
+        "weight": 722.0,
+        "cover": 1619.4168701171875
+      },
+      {
+        "feature": "month",
+        "gain": 7863.55517578125,
+        "weight": 723.0,
+        "cover": 909.1410522460938
+      },
+      {
+        "feature": "season",
+        "gain": 7507.611328125,
+        "weight": 153.0,
+        "cover": 481.9281005859375
+      },
+      {
+        "feature": "기온",
+        "gain": 4971.8388671875,
+        "weight": 1967.0,
+        "cover": 692.2048950195312
+      },
+      {
+        "feature": "강수량",
+        "gain": 3855.5146484375,
+        "weight": 437.0,
+        "cover": 538.668212890625
+      },
+      {
+        "feature": "day_of_week",
+        "gain": 3697.418701171875,
+        "weight": 454.0,
+        "cover": 447.2599182128906
+      },
+      {
+        "feature": "습도",
+        "gain": 3582.832275390625,
+        "weight": 1249.0,
+        "cover": 1642.65966796875
+      },
+      {
+        "feature": "is_weekend",
+        "gain": 3079.166259765625,
+        "weight": 28.0,
+        "cover": 452.53570556640625
+      },
+      {
+        "feature": "region_code",
+        "gain": 1310.8668212890625,
+        "weight": 31.0,
+        "cover": 1477.290283203125
+      },
+      {
+        "feature": "is_daytime",
+        "gain": 994.5715942382812,
+        "weight": 3.0,
+        "cover": 34927.0
+      }
+    ],
+    "irrad_rank": 6,
+    "irrad_x_solar_rank": 8,
+    "region_code_rank": 23,
+    "lag_1h_gain": 8516634.0,
+    "irrad_gain": 149633.640625,
+    "lag_to_irrad_ratio": 56.916572800254954
+  },
+  "diagnosis5_perturbation_size": {
+    "irrad_only": {
+      "+0.1": {
+        "increase_ratio": 0.245,
+        "mean_diff": 0.15833157300949097
+      },
+      "+0.5": {
+        "increase_ratio": 0.575,
+        "mean_diff": 0.25871342420578003
+      },
+      "+1.0": {
+        "increase_ratio": 0.588,
+        "mean_diff": 0.6832816004753113
+      },
+      "+2.0": {
+        "increase_ratio": 0.509,
+        "mean_diff": 0.12216261029243469
+      },
+      "+3.0": {
+        "increase_ratio": 0.508,
+        "mean_diff": 0.07093475013971329
+      },
+      "+5.0": {
+        "increase_ratio": 0.547,
+        "mean_diff": 0.2502671182155609
+      }
+    },
+    "irrad_and_interaction": {
+      "+0.1": {
+        "increase_ratio": 0.353,
+        "mean_diff": 0.18688267469406128
+      },
+      "+0.5": {
+        "increase_ratio": 0.67,
+        "mean_diff": -0.20563459396362305
+      },
+      "+1.0": {
+        "increase_ratio": 0.683,
+        "mean_diff": -0.12138345092535019
+      },
+      "+2.0": {
+        "increase_ratio": 0.615,
+        "mean_diff": -0.9348706007003784
+      },
+      "+3.0": {
+        "increase_ratio": 0.63,
+        "mean_diff": -0.9940197467803955
+      },
+      "+5.0": {
+        "increase_ratio": 0.672,
+        "mean_diff": -0.9711818695068359
+      }
+    }
+  }
+}

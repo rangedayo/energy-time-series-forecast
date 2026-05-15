@@ -1,0 +1,33 @@
+{
+  "naive_strategy": {
+    "curtailment_rate_pct": 95.2,
+    "shortage_count": 509,
+    "battery_cycles": 152.14,
+    "ess_score": 4.38
+  },
+  "xgb_split_strategy": {
+    "curtailment_rate_pct": 86.09,
+    "shortage_count": 509,
+    "battery_cycles": 152.14,
+    "ess_score": 12.69
+  },
+  "region_ess_scores_xgb_split": {
+    "강원도": 36.52,
+    "경기도": 40.42,
+    "경상남도": 35.31,
+    "경상북도": 31.46,
+    "광주시": 0.03,
+    "대구시": 0.03,
+    "대전시": 0.03,
+    "부산시": 20.22,
+    "서울시": 0.03,
+    "세종시": 0.04,
+    "울산시": 0.04,
+    "인천시": 0.03,
+    "전라남도": 24.5,
+    "전라북도": 25.92,
+    "제주도": 32.23,
+    "충청남도": 25.94,
+    "충청북도": 47.65
+  }
+}

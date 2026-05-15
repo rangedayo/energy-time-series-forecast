@@ -1,0 +1,37 @@
+{
+  "state_dict": {
+    "status": "PASS",
+    "max_error": 0.0
+  },
+  "torchscript": {
+    "status": "PASS",
+    "max_error": 0.0
+  },
+  "onnx": {
+    "status": "PASS",
+    "max_error": 2.980232238769531e-07
+  },
+  "batch_inference": {
+    "batch_1": {
+      "status": "PASS",
+      "shape": [
+        1,
+        1
+      ]
+    },
+    "batch_8": {
+      "status": "PASS",
+      "shape": [
+        8,
+        1
+      ]
+    },
+    "batch_64": {
+      "status": "PASS",
+      "shape": [
+        64,
+        1
+      ]
+    }
+  }
+}
