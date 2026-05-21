@@ -8,3 +8,6 @@ seaborn
 statsmodels
 wandb
 pip-tools
+fastapi
+uvicorn[standard]
+pydantic

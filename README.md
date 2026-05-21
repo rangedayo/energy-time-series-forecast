@@ -203,6 +203,121 @@ python -m src.reporting.final_report_v2
 
 ---
 
+## API 서빙 (FastAPI)
+
+학습된 XGBoost 모델을 FastAPI로 노출합니다 (`app/`).
+
+### 실행
+
+```bash
+# (선택) 운영용 API Key 설정
+export SOLAR_API_KEY="your-strong-random-key"   # Windows: set SOLAR_API_KEY=...
+
+# 서버 기동
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+미설정 시 개발용 기본키 `dev-key-change-me`로 동작하며 시작 시 경고 로그가
+출력됩니다. 운영 배포 전 반드시 환경변수를 통해 교체하세요.
+
+### 엔드포인트
+
+- `GET /` · `GET /health` — 메타/헬스
+- `POST /predict` — 단일 (region, timestamp) 발전량 예측
+- `POST /predict_batch` — 최대 1000건 배치 예측 (XGBoost 추론은 스레드풀에서 실행)
+
+Swagger UI는 `http://localhost:8000/docs`, ReDoc은 `http://localhost:8000/redoc`
+에서 확인할 수 있습니다.
+
+본 API는 학습 모델이 24개 피처를 입력으로 사용함에 따라, 클라이언트가
+원시 기상 6개(기온/강수량/습도/일조/일사량/전운량)와 시간/지역, 그리고
+직전 시점들의 lag/rolling 통계를 함께 제공해야 합니다. 실서비스에서는
+기상청 API + 자체 발전 이력 DB와 결합해서 사용하는 것을 가정합니다.
+
+요청 페이로드의 정확한 필드와 검증 범위는 Swagger UI 또는
+[`app/schemas.py`](app/schemas.py)를 참고하세요. 한글 컬럼명(`기온` 등)과
+영문 변수명(`temperature` 등) 모두 alias로 허용됩니다.
+
+### 호출 예시
+
+curl로 보낼 때 `@file` 형식은 일부 환경에서 chunked transfer로 전송되며
+FastAPI의 일부 검증 오류 경로가 400 Bad Request로 응답될 수 있습니다.
+**urllib / `requests` 사용을 권장**합니다.
+
+```python
+import requests
+
+payload = {
+    "timestamp": "2023-07-15T13:00:00",
+    "region": "전라남도",
+    "기온": 28.5, "강수량": 0.0, "습도": 65.0, "일조": 0.9,
+    "irradiance": 3.0, "전운량": 2.0,
+    "lag_1h": 120.0, "lag_2h": 110.0, "lag_3h": 95.0, "lag_24h": 130.0,
+    "power_diff_1h": 10.0, "power_diff_2h": 25.0,
+    "rolling_mean_3h": 108.3, "rolling_mean_6h": 95.5, "rolling_std_3h": 12.7,
+}
+r = requests.post(
+    "http://localhost:8000/predict",
+    headers={"X-API-Key": "dev-key-change-me"},
+    json=payload,
+)
+print(r.status_code, r.json())
+# 200 {'predicted_power_mwh': 129.23..., 'region': '전라남도', ...}
+```
+
+소형 페이로드의 curl 예시도 동작합니다:
+
+```bash
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: dev-key-change-me" \
+  -d '{...위와 동일한 JSON...}'
+```
+
+### 회귀 테스트
+
+`pytest app/tests/test_api.py -v` 로 8개 회귀 테스트가 통과해야 합니다.
+특히 `test_predict_snapshot`은 학습 CSV에서 5행을 샘플링해 raw `model.predict()`
+결과와 API 경로의 결과가 **|diff| < 1e-4** 안에 들어오는지 검증합니다 —
+"API 경로로 예측해도 학습 모델과 같은 답을 낸다"의 항상 검증되는 보증입니다.
+
+---
+
+## 운영 모니터링 회고
+
+본 프로젝트는 학술/포트폴리오 범위라 실제 모니터링 인프라는 구성하지 않았지만,
+실서비스 배포 시 추가했을 항목을 명시합니다.
+
+### 추가할 모니터링 항목
+
+- **응답 시간 p95/p99 모니터링** — `RequestLoggingMiddleware`의 ms 로그를
+  Prometheus histogram으로 승격
+- **예측 분포 드리프트** — 일별 predicted_power_mwh 분포를 학습 시점 발전량
+  분포와 KS-test/PSI로 비교
+- **입력 피처 분포 드리프트** — 특히 기상 6변수(기온/강수량/습도/일조/일사량/전운량)
+  의 평균·분산이 학습 분포에서 벗어나는지 감시
+- **`feature_names` 검증 실패 알림** — 이번 2단계에서 발견한 "JSON과 모델의
+  피처 셋 불일치" 사고를 자동 감지하기 위해, 모델 재배포 시 lifespan의
+  `booster.feature_names == FEATURE_ORDER` 체크를 CI에서도 동일하게 실행
+
+### 피드백 루프
+
+- 실패 사례(500, 클라이언트 보고 이상 예측)를 별도 테이블에 적재하고,
+  재학습 데이터로 회수합니다 — 4단계(운영) → 2단계(데이터/학습)의 닫힌 사이클.
+- 본 프로젝트는 사용자 직접 입력이 아닌 기상청 API/자체 발전 이력 DB에서
+  입력을 받는 구조이므로 사용자 단의 피드백 수집은 해당 없습니다.
+
+### 본 단계에서 학습한 교훈
+
+**모델 입출력 명세의 진실의 원천은 학습 스크립트와 모델 파일이지,
+별도 JSON 문서(`feature_list_national.json`)가 아니다.** 2단계에서 모델은
+24개 피처를 기대했는데 JSON은 18개만 명시하고 있었음 — 학습 코드의
+`train.columns - NON_FEAT` 산출 결과만이 권위 있는 컬럼 셋입니다.
+`app/config.py::FEATURE_ORDER`는 이 사실을 코드에 박은 결과이며,
+lifespan에서 `booster.feature_names`와 동일성을 검증해 재발을 막습니다.
+
+---
+
 ## 모델링 규칙
 
 재현성과 데이터 누수 방지를 위해 다음을 강제합니다:
