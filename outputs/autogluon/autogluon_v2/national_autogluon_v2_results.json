@@ -1,0 +1,209 @@
+{
+  "version": "v2",
+  "model": "autogluon_v2",
+  "config": {
+    "hyperparameters": "manual (RecursiveTabular excluded, TFT/PatchTST extended)",
+    "time_limit_sec": 10800,
+    "prediction_length": 24,
+    "eval_metric": "MASE",
+    "num_val_windows": 5,
+    "random_state": 42
+  },
+  "summary": {
+    "simple_avg_mae": 18.100668443022144,
+    "weighted_mae": 56.8881875198529,
+    "jeonnam_mae": 141.56496591869,
+    "eval_period": "2023-01-01 01:00:00 ~ 2023-03-01 00:00:00",
+    "n_steps_predicted": 59
+  },
+  "baseline_xgboost": {
+    "simple_avg_mae": 8.789760614317888,
+    "weighted_mae": 29.54898629381866,
+    "jeonnam_mae": 75.82623895936642
+  },
+  "leaderboard_top10": [
+    {
+      "model": "WeightedEnsemble",
+      "score_val": -0.5986226899148842,
+      "pred_time_val": 3.107072967342174,
+      "fit_time_marginal": 2.386335973000314,
+      "fit_order": 8
+    },
+    {
+      "model": "DirectTabular",
+      "score_val": -0.6331936224731309,
+      "pred_time_val": 3.0457396507263184,
+      "fit_time_marginal": 429.1509037017822,
+      "fit_order": 2
+    },
+    {
+      "model": "SeasonalNaive",
+      "score_val": -0.8404524283288891,
+      "pred_time_val": 0.05983614921569824,
+      "fit_time_marginal": 4.453531980514526,
+      "fit_order": 1
+    },
+    {
+      "model": "AutoETS",
+      "score_val": -1.7456251284634312,
+      "pred_time_val": 4.335187673568726,
+      "fit_time_marginal": 23.728408575057983,
+      "fit_order": 3
+    },
+    {
+      "model": "TemporalFusionTransformer_2",
+      "score_val": -1.8375175444202914,
+      "pred_time_val": 0.7266724109649658,
+      "fit_time_marginal": 887.9773755073547,
+      "fit_order": 5
+    },
+    {
+      "model": "TemporalFusionTransformer",
+      "score_val": -1.8989817377235567,
+      "pred_time_val": 0.6738913059234619,
+      "fit_time_marginal": 931.5099716186523,
+      "fit_order": 4
+    },
+    {
+      "model": "PatchTST",
+      "score_val": -3.0568937039310042,
+      "pred_time_val": 0.44194602966308594,
+      "fit_time_marginal": 565.9806439876556,
+      "fit_order": 6
+    },
+    {
+      "model": "PatchTST_2",
+      "score_val": -3.120506137734833,
+      "pred_time_val": 0.3666701316833496,
+      "fit_time_marginal": 531.4151799678802,
+      "fit_order": 7
+    }
+  ],
+  "region_comparison": [
+    {
+      "region": "전라남도",
+      "mae_autogluon": 141.56496591869,
+      "weight": 0.3009031484297955,
+      "mae_xgb": 75.82623895936642,
+      "diff": 65.73872695932359
+    },
+    {
+      "region": "충청남도",
+      "mae_autogluon": 31.710478299965164,
+      "weight": 0.1359935176431796,
+      "mae_xgb": 17.64745669478659,
+      "diff": 14.063021605178573
+    },
+    {
+      "region": "경상북도",
+      "mae_autogluon": 23.869537699108683,
+      "weight": 0.11518784510387375,
+      "mae_xgb": 12.46349423485663,
+      "diff": 11.406043464252052
+    },
+    {
+      "region": "전라북도",
+      "mae_autogluon": 30.567401540505987,
+      "weight": 0.08865409543391123,
+      "mae_xgb": 11.617566267953636,
+      "diff": 18.94983527255235
+    },
+    {
+      "region": "강원도",
+      "mae_autogluon": 20.325378187643825,
+      "weight": 0.08260393208803142,
+      "mae_xgb": 10.009315193208394,
+      "diff": 10.31606299443543
+    },
+    {
+      "region": "경상남도",
+      "mae_autogluon": 13.995360362192052,
+      "weight": 0.06791145153264914,
+      "mae_xgb": 5.991295347138869,
+      "diff": 8.004065015053182
+    },
+    {
+      "region": "제주도",
+      "mae_autogluon": 13.952330294665002,
+      "weight": 0.05963007585081119,
+      "mae_xgb": 1.9960853665507134,
+      "diff": 11.956244928114288
+    },
+    {
+      "region": "경기도",
+      "mae_autogluon": 8.475945297143744,
+      "weight": 0.046687556906905056,
+      "mae_xgb": 3.4444716690630433,
+      "diff": 5.0314736280807
+    },
+    {
+      "region": "충청북도",
+      "mae_autogluon": 12.597412209259424,
+      "weight": 0.045531942695368054,
+      "mae_xgb": 7.031835050569629,
+      "diff": 5.565577158689795
+    },
+    {
+      "region": "부산시",
+      "mae_autogluon": 2.2309435376921343,
+      "weight": 0.016320402719911475,
+      "mae_xgb": 0.7788929968204947,
+      "diff": 1.4520505408716395
+    },
+    {
+      "region": "광주시",
+      "mae_autogluon": 1.5943063853619452,
+      "weight": 0.012598095162009753,
+      "mae_xgb": 0.5050804551793784,
+      "diff": 1.0892259301825669
+    },
+    {
+      "region": "대구시",
+      "mae_autogluon": 1.3914299428647832,
+      "weight": 0.009756373694877384,
+      "mae_xgb": 0.5819734663750884,
+      "diff": 0.8094564764896948
+    },
+    {
+      "region": "인천시",
+      "mae_autogluon": 1.580119876970576,
+      "weight": 0.008590109407082677,
+      "mae_xgb": 0.7980020632501776,
+      "diff": 0.7821178137203983
+    },
+    {
+      "region": "서울시",
+      "mae_autogluon": 0.3545725657993155,
+      "weight": 0.003402594392134786,
+      "mae_xgb": 0.13666547448973815,
+      "diff": 0.21790709130957736
+    },
+    {
+      "region": "세종시",
+      "mae_autogluon": 0.7419238653099659,
+      "weight": 0.0031506336755512624,
+      "mae_xgb": 0.3214672818083682,
+      "diff": 0.4204565835015977
+    },
+    {
+      "region": "대전시",
+      "mae_autogluon": 0.2521682458188445,
+      "weight": 0.0029148793070309306,
+      "mae_xgb": 0.09950844686087569,
+      "diff": 0.15265979895796883
+    },
+    {
+      "region": "울산시",
+      "mae_autogluon": 2.507089302385048,
+      "weight": 0.00016334595687686183,
+      "mae_xgb": 0.1765814751260229,
+      "diff": 2.3305078272590247
+    }
+  ],
+  "v1_comparison": {
+    "v1_simple_avg_mae": 18.21,
+    "v1_weighted_mae": 57.53,
+    "v1_jeonnam_mae": 143.45,
+    "v2_improvement_weighted_mae_pct": 1.1156135583992741
+  }
+}
