@@ -12,7 +12,7 @@
     "noise_regions": [
       "울산시"
     ],
-    "generated_at": "2026-05-16 01:43:03"
+    "generated_at": "2026-05-25 16:54:25"
   },
   "region_params": {
     "강원도": {
@@ -168,6 +168,33 @@
         "total_demand_mwh": 399775.69,
         "total_gen_mwh": 489818.24,
         "n_hours": 5694,
+        "total_import_mwh": 83474.23,
+        "total_export_mwh": 155936.56,
+        "total_cost_krw": 9516090860.0,
+        "total_revenue_krw": 27501473725.0,
+        "net_revenue_krw": 17985382865.0,
+        "import_mwh_by_period": {
+          "off_peak": 52344.56,
+          "mid_peak": 21025.09,
+          "max_peak": 10104.58
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 45432.68,
+          "max_peak": 110503.88
+        },
+        "cost_krw_by_period": {
+          "off_peak": 4751838006.0,
+          "mid_peak": 2789917650.0,
+          "max_peak": 1974335204.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 6222567638.0,
+          "max_peak": 21278906087.0
+        },
+        "avg_import_price_krw_per_mwh": 114000.34,
+        "avg_export_price_krw_per_mwh": 176363.22,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -184,6 +211,33 @@
         "total_demand_mwh": 399775.69,
         "total_gen_mwh": 489818.24,
         "n_hours": 5694,
+        "total_import_mwh": 83474.23,
+        "total_export_mwh": 155936.56,
+        "total_cost_krw": 9516090860.0,
+        "total_revenue_krw": 27501473725.0,
+        "net_revenue_krw": 17985382865.0,
+        "import_mwh_by_period": {
+          "off_peak": 52344.56,
+          "mid_peak": 21025.09,
+          "max_peak": 10104.58
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 45432.68,
+          "max_peak": 110503.88
+        },
+        "cost_krw_by_period": {
+          "off_peak": 4751838006.0,
+          "mid_peak": 2789917650.0,
+          "max_peak": 1974335204.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 6222567638.0,
+          "max_peak": 21278906087.0
+        },
+        "avg_import_price_krw_per_mwh": 114000.34,
+        "avg_export_price_krw_per_mwh": 176363.22,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -200,6 +254,33 @@
         "total_demand_mwh": 399775.69,
         "total_gen_mwh": 489818.24,
         "n_hours": 5694,
+        "total_import_mwh": 88754.34,
+        "total_export_mwh": 162455.22,
+        "total_cost_krw": 9689606074.0,
+        "total_revenue_krw": 28234011127.0,
+        "net_revenue_krw": 18544405052.0,
+        "import_mwh_by_period": {
+          "off_peak": 62825.56,
+          "mid_peak": 17450.12,
+          "max_peak": 8478.66
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 54189.62,
+          "max_peak": 108265.6
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5698346358.0,
+          "mid_peak": 2337073664.0,
+          "max_peak": 1654186052.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 7316971169.0,
+          "max_peak": 20917039957.0
+        },
+        "avg_import_price_krw_per_mwh": 109173.32,
+        "avg_export_price_krw_per_mwh": 173795.65,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -216,6 +297,33 @@
         "total_demand_mwh": 399775.69,
         "total_gen_mwh": 489818.24,
         "n_hours": 5694,
+        "total_import_mwh": 88657.43,
+        "total_export_mwh": 162335.58,
+        "total_cost_krw": 9679183497.0,
+        "total_revenue_krw": 28213043677.0,
+        "net_revenue_krw": 18533860180.0,
+        "import_mwh_by_period": {
+          "off_peak": 62766.73,
+          "mid_peak": 17412.04,
+          "max_peak": 8478.66
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 54189.62,
+          "max_peak": 108145.96
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5693174651.0,
+          "mid_peak": 2331822794.0,
+          "max_peak": 1654186052.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 7316971169.0,
+          "max_peak": 20896072508.0
+        },
+        "avg_import_price_krw_per_mwh": 109175.09,
+        "avg_export_price_krw_per_mwh": 173794.58,
         "flagged_noise_region": false
       }
     },
@@ -234,6 +342,33 @@
         "total_demand_mwh": 226450.33,
         "total_gen_mwh": 260416.18,
         "n_hours": 5705,
+        "total_import_mwh": 62240.38,
+        "total_export_mwh": 86183.3,
+        "total_cost_krw": 6781984297.0,
+        "total_revenue_krw": 15202050233.0,
+        "net_revenue_krw": 8420065935.0,
+        "import_mwh_by_period": {
+          "off_peak": 43664.2,
+          "mid_peak": 12928.48,
+          "max_peak": 5647.7
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 24928.47,
+          "max_peak": 61254.82
+        },
+        "cost_krw_by_period": {
+          "off_peak": 3946167654.0,
+          "mid_peak": 1716470604.0,
+          "max_peak": 1119346040.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3418790335.0,
+          "max_peak": 11783259898.0
+        },
+        "avg_import_price_krw_per_mwh": 108964.38,
+        "avg_export_price_krw_per_mwh": 176392.07,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -250,6 +385,33 @@
         "total_demand_mwh": 226450.33,
         "total_gen_mwh": 260416.18,
         "n_hours": 5705,
+        "total_import_mwh": 62240.38,
+        "total_export_mwh": 86183.3,
+        "total_cost_krw": 6781984297.0,
+        "total_revenue_krw": 15202050233.0,
+        "net_revenue_krw": 8420065935.0,
+        "import_mwh_by_period": {
+          "off_peak": 43664.2,
+          "mid_peak": 12928.48,
+          "max_peak": 5647.7
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 24928.47,
+          "max_peak": 61254.82
+        },
+        "cost_krw_by_period": {
+          "off_peak": 3946167654.0,
+          "mid_peak": 1716470604.0,
+          "max_peak": 1119346040.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3418790335.0,
+          "max_peak": 11783259898.0
+        },
+        "avg_import_price_krw_per_mwh": 108964.38,
+        "avg_export_price_krw_per_mwh": 176392.07,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -266,6 +428,33 @@
         "total_demand_mwh": 226450.33,
         "total_gen_mwh": 260416.18,
         "n_hours": 5705,
+        "total_import_mwh": 65354.24,
+        "total_export_mwh": 89983.47,
+        "total_cost_krw": 6877799986.0,
+        "total_revenue_krw": 15608105265.0,
+        "net_revenue_krw": 8730305279.0,
+        "import_mwh_by_period": {
+          "off_peak": 49610.08,
+          "mid_peak": 11355.16,
+          "max_peak": 4389.0
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 30358.61,
+          "max_peak": 59624.86
+        },
+        "cost_krw_by_period": {
+          "off_peak": 4482553627.0,
+          "mid_peak": 1523223262.0,
+          "max_peak": 872023097.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 4108362581.0,
+          "max_peak": 11499742685.0
+        },
+        "avg_import_price_krw_per_mwh": 105238.78,
+        "avg_export_price_krw_per_mwh": 173455.25,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -282,6 +471,33 @@
         "total_demand_mwh": 226450.33,
         "total_gen_mwh": 260416.18,
         "n_hours": 5705,
+        "total_import_mwh": 65304.47,
+        "total_export_mwh": 89922.03,
+        "total_cost_krw": 6872115591.0,
+        "total_revenue_krw": 15597901878.0,
+        "net_revenue_krw": 8725786287.0,
+        "import_mwh_by_period": {
+          "off_peak": 49582.55,
+          "mid_peak": 11329.57,
+          "max_peak": 4392.35
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 30318.65,
+          "max_peak": 59603.37
+        },
+        "cost_krw_by_period": {
+          "off_peak": 4480107322.0,
+          "mid_peak": 1519320531.0,
+          "max_peak": 872687738.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 4102753493.0,
+          "max_peak": 11495148385.0
+        },
+        "avg_import_price_krw_per_mwh": 105231.93,
+        "avg_export_price_krw_per_mwh": 173460.3,
         "flagged_noise_region": false
       }
     },
@@ -300,6 +516,33 @@
         "total_demand_mwh": 322824.63,
         "total_gen_mwh": 399179.49,
         "n_hours": 5586,
+        "total_import_mwh": 79915.66,
+        "total_export_mwh": 141443.06,
+        "total_cost_krw": 8580371912.0,
+        "total_revenue_krw": 24355528624.0,
+        "net_revenue_krw": 15775156712.0,
+        "import_mwh_by_period": {
+          "off_peak": 56398.8,
+          "mid_peak": 17560.46,
+          "max_peak": 5956.4
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 49098.89,
+          "max_peak": 92344.17
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5079330217.0,
+          "mid_peak": 2334653448.0,
+          "max_peak": 1166388246.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 6755654523.0,
+          "max_peak": 17599874100.0
+        },
+        "avg_import_price_krw_per_mwh": 107367.85,
+        "avg_export_price_krw_per_mwh": 172193.17,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -316,6 +559,33 @@
         "total_demand_mwh": 322824.63,
         "total_gen_mwh": 399179.49,
         "n_hours": 5586,
+        "total_import_mwh": 79915.66,
+        "total_export_mwh": 141443.06,
+        "total_cost_krw": 8580371912.0,
+        "total_revenue_krw": 24355528624.0,
+        "net_revenue_krw": 15775156712.0,
+        "import_mwh_by_period": {
+          "off_peak": 56398.8,
+          "mid_peak": 17560.46,
+          "max_peak": 5956.4
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 49098.89,
+          "max_peak": 92344.17
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5079330217.0,
+          "mid_peak": 2334653448.0,
+          "max_peak": 1166388246.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 6755654523.0,
+          "max_peak": 17599874100.0
+        },
+        "avg_import_price_krw_per_mwh": 107367.85,
+        "avg_export_price_krw_per_mwh": 172193.17,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -332,6 +602,33 @@
         "total_demand_mwh": 322824.63,
         "total_gen_mwh": 399179.49,
         "n_hours": 5586,
+        "total_import_mwh": 84391.98,
+        "total_export_mwh": 146969.38,
+        "total_cost_krw": 8735552431.0,
+        "total_revenue_krw": 25076649872.0,
+        "net_revenue_krw": 16341097441.0,
+        "import_mwh_by_period": {
+          "off_peak": 65054.1,
+          "mid_peak": 14741.19,
+          "max_peak": 4596.69
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 54932.44,
+          "max_peak": 92036.93
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5862384343.0,
+          "mid_peak": 1976082794.0,
+          "max_peak": 897085293.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 7450564979.0,
+          "max_peak": 17626084894.0
+        },
+        "avg_import_price_krw_per_mwh": 103511.65,
+        "avg_export_price_krw_per_mwh": 170625.0,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -348,6 +645,33 @@
         "total_demand_mwh": 322824.63,
         "total_gen_mwh": 399179.49,
         "n_hours": 5586,
+        "total_import_mwh": 84374.49,
+        "total_export_mwh": 146947.79,
+        "total_cost_krw": 8738151947.0,
+        "total_revenue_krw": 25070946519.0,
+        "net_revenue_krw": 16332794572.0,
+        "import_mwh_by_period": {
+          "off_peak": 65006.88,
+          "mid_peak": 14724.71,
+          "max_peak": 4642.9
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 54932.44,
+          "max_peak": 92015.35
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5858148810.0,
+          "mid_peak": 1973773275.0,
+          "max_peak": 906229861.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 7450564979.0,
+          "max_peak": 17620381540.0
+        },
+        "avg_import_price_krw_per_mwh": 103563.91,
+        "avg_export_price_krw_per_mwh": 170611.25,
         "flagged_noise_region": false
       }
     },
@@ -366,6 +690,33 @@
         "total_demand_mwh": 559698.38,
         "total_gen_mwh": 627527.54,
         "n_hours": 5715,
+        "total_import_mwh": 138749.21,
+        "total_export_mwh": 181902.48,
+        "total_cost_krw": 15468440463.0,
+        "total_revenue_krw": 32035286638.0,
+        "net_revenue_krw": 16566846175.0,
+        "import_mwh_by_period": {
+          "off_peak": 91308.03,
+          "mid_peak": 32960.48,
+          "max_peak": 14480.71
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 52068.56,
+          "max_peak": 129833.91
+        },
+        "cost_krw_by_period": {
+          "off_peak": 8237199648.0,
+          "mid_peak": 4372523542.0,
+          "max_peak": 2858717274.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 7165379832.0,
+          "max_peak": 24869906806.0
+        },
+        "avg_import_price_krw_per_mwh": 111484.89,
+        "avg_export_price_krw_per_mwh": 176112.43,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -382,6 +733,33 @@
         "total_demand_mwh": 559698.38,
         "total_gen_mwh": 627527.54,
         "n_hours": 5715,
+        "total_import_mwh": 138749.21,
+        "total_export_mwh": 181902.48,
+        "total_cost_krw": 15468440463.0,
+        "total_revenue_krw": 32035286638.0,
+        "net_revenue_krw": 16566846175.0,
+        "import_mwh_by_period": {
+          "off_peak": 91308.03,
+          "mid_peak": 32960.48,
+          "max_peak": 14480.71
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 52068.56,
+          "max_peak": 129833.91
+        },
+        "cost_krw_by_period": {
+          "off_peak": 8237199648.0,
+          "mid_peak": 4372523542.0,
+          "max_peak": 2858717274.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 7165379832.0,
+          "max_peak": 24869906806.0
+        },
+        "avg_import_price_krw_per_mwh": 111484.89,
+        "avg_export_price_krw_per_mwh": 176112.43,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -398,6 +776,33 @@
         "total_demand_mwh": 559698.38,
         "total_gen_mwh": 627527.54,
         "n_hours": 5715,
+        "total_import_mwh": 146701.62,
+        "total_export_mwh": 191720.26,
+        "total_cost_krw": 15750483295.0,
+        "total_revenue_krw": 33197036798.0,
+        "net_revenue_krw": 17446553503.0,
+        "import_mwh_by_period": {
+          "off_peak": 106866.42,
+          "mid_peak": 27581.88,
+          "max_peak": 12253.31
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 64310.01,
+          "max_peak": 127410.25
+        },
+        "cost_krw_by_period": {
+          "off_peak": 9640912402.0,
+          "mid_peak": 3692960981.0,
+          "max_peak": 2416609912.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 8698000383.0,
+          "max_peak": 24499036415.0
+        },
+        "avg_import_price_krw_per_mwh": 107364.07,
+        "avg_export_price_krw_per_mwh": 173153.52,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -414,6 +819,33 @@
         "total_demand_mwh": 559698.38,
         "total_gen_mwh": 627527.54,
         "n_hours": 5715,
+        "total_import_mwh": 146567.86,
+        "total_export_mwh": 191555.12,
+        "total_cost_krw": 15740809557.0,
+        "total_revenue_krw": 33152722862.0,
+        "net_revenue_krw": 17411913304.0,
+        "import_mwh_by_period": {
+          "off_peak": 106657.36,
+          "mid_peak": 27647.12,
+          "max_peak": 12263.38
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 64310.01,
+          "max_peak": 127245.11
+        },
+        "cost_krw_by_period": {
+          "off_peak": 9622661414.0,
+          "mid_peak": 3700123472.0,
+          "max_peak": 2418024672.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 8698000383.0,
+          "max_peak": 24454722479.0
+        },
+        "avg_import_price_krw_per_mwh": 107396.05,
+        "avg_export_price_krw_per_mwh": 173071.45,
         "flagged_noise_region": false
       }
     },
@@ -432,6 +864,33 @@
         "total_demand_mwh": 61991.6,
         "total_gen_mwh": 51267.57,
         "n_hours": 5792,
+        "total_import_mwh": 23642.07,
+        "total_export_mwh": 10486.99,
+        "total_cost_krw": 2657010628.0,
+        "total_revenue_krw": 1901402790.0,
+        "net_revenue_krw": -755607838.0,
+        "import_mwh_by_period": {
+          "off_peak": 15565.27,
+          "mid_peak": 5529.88,
+          "max_peak": 2546.92
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 2143.37,
+          "max_peak": 8343.62
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1403158036.0,
+          "mid_peak": 742034298.0,
+          "max_peak": 511818294.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 297129518.0,
+          "max_peak": 1604273272.0
+        },
+        "avg_import_price_krw_per_mwh": 112384.86,
+        "avg_export_price_krw_per_mwh": 181310.67,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -448,6 +907,33 @@
         "total_demand_mwh": 61991.6,
         "total_gen_mwh": 51267.57,
         "n_hours": 5792,
+        "total_import_mwh": 23642.07,
+        "total_export_mwh": 10486.99,
+        "total_cost_krw": 2657010628.0,
+        "total_revenue_krw": 1901402790.0,
+        "net_revenue_krw": -755607838.0,
+        "import_mwh_by_period": {
+          "off_peak": 15565.27,
+          "mid_peak": 5529.88,
+          "max_peak": 2546.92
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 2143.37,
+          "max_peak": 8343.62
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1403158036.0,
+          "mid_peak": 742034298.0,
+          "max_peak": 511818294.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 297129518.0,
+          "max_peak": 1604273272.0
+        },
+        "avg_import_price_krw_per_mwh": 112384.86,
+        "avg_export_price_krw_per_mwh": 181310.67,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -464,6 +950,33 @@
         "total_demand_mwh": 61991.6,
         "total_gen_mwh": 51267.57,
         "n_hours": 5792,
+        "total_import_mwh": 24553.72,
+        "total_export_mwh": 11600.59,
+        "total_cost_krw": 2697717680.0,
+        "total_revenue_krw": 2031667397.0,
+        "net_revenue_krw": -666050283.0,
+        "import_mwh_by_period": {
+          "off_peak": 17077.48,
+          "mid_peak": 5230.29,
+          "max_peak": 2245.95
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3551.4,
+          "max_peak": 8049.19
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1538698543.0,
+          "mid_peak": 707488274.0,
+          "max_peak": 451530863.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 480637363.0,
+          "max_peak": 1551030034.0
+        },
+        "avg_import_price_krw_per_mwh": 109870.0,
+        "avg_export_price_krw_per_mwh": 175134.82,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -480,6 +993,33 @@
         "total_demand_mwh": 61991.6,
         "total_gen_mwh": 51267.57,
         "n_hours": 5792,
+        "total_import_mwh": 24536.64,
+        "total_export_mwh": 11579.5,
+        "total_cost_krw": 2694977143.0,
+        "total_revenue_krw": 2029052164.0,
+        "net_revenue_krw": -665924979.0,
+        "import_mwh_by_period": {
+          "off_peak": 17086.25,
+          "mid_peak": 5207.04,
+          "max_peak": 2243.35
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3541.33,
+          "max_peak": 8038.17
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1539463925.0,
+          "mid_peak": 704793042.0,
+          "max_peak": 450720177.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 479364598.0,
+          "max_peak": 1549687567.0
+        },
+        "avg_import_price_krw_per_mwh": 109834.81,
+        "avg_export_price_krw_per_mwh": 175227.98,
         "flagged_noise_region": false
       }
     },
@@ -498,6 +1038,33 @@
         "total_demand_mwh": 47671.83,
         "total_gen_mwh": 48669.4,
         "n_hours": 5750,
+        "total_import_mwh": 15064.9,
+        "total_export_mwh": 13971.38,
+        "total_cost_krw": 1614699222.0,
+        "total_revenue_krw": 2489869578.0,
+        "net_revenue_krw": 875170356.0,
+        "import_mwh_by_period": {
+          "off_peak": 10804.36,
+          "mid_peak": 3036.81,
+          "max_peak": 1223.72
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3866.4,
+          "max_peak": 10104.98
+        },
+        "cost_krw_by_period": {
+          "off_peak": 974040127.0,
+          "mid_peak": 401673242.0,
+          "max_peak": 238985854.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 533764749.0,
+          "max_peak": 1956104829.0
+        },
+        "avg_import_price_krw_per_mwh": 107182.87,
+        "avg_export_price_krw_per_mwh": 178212.15,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -514,6 +1081,33 @@
         "total_demand_mwh": 47671.83,
         "total_gen_mwh": 48669.4,
         "n_hours": 5750,
+        "total_import_mwh": 15064.9,
+        "total_export_mwh": 13971.38,
+        "total_cost_krw": 1614699222.0,
+        "total_revenue_krw": 2489869578.0,
+        "net_revenue_krw": 875170356.0,
+        "import_mwh_by_period": {
+          "off_peak": 10804.36,
+          "mid_peak": 3036.81,
+          "max_peak": 1223.72
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3866.4,
+          "max_peak": 10104.98
+        },
+        "cost_krw_by_period": {
+          "off_peak": 974040127.0,
+          "mid_peak": 401673242.0,
+          "max_peak": 238985854.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 533764749.0,
+          "max_peak": 1956104829.0
+        },
+        "avg_import_price_krw_per_mwh": 107182.87,
+        "avg_export_price_krw_per_mwh": 178212.15,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -530,6 +1124,33 @@
         "total_demand_mwh": 47671.83,
         "total_gen_mwh": 48669.4,
         "n_hours": 5750,
+        "total_import_mwh": 15714.29,
+        "total_export_mwh": 14763.88,
+        "total_cost_krw": 1636358309.0,
+        "total_revenue_krw": 2577714768.0,
+        "net_revenue_krw": 941356459.0,
+        "import_mwh_by_period": {
+          "off_peak": 12004.43,
+          "mid_peak": 2728.56,
+          "max_peak": 981.29
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 4916.25,
+          "max_peak": 9847.63
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1082411836.0,
+          "mid_peak": 363362683.0,
+          "max_peak": 190583791.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 666033223.0,
+          "max_peak": 1911681545.0
+        },
+        "avg_import_price_krw_per_mwh": 104131.88,
+        "avg_export_price_krw_per_mwh": 174596.04,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -546,6 +1167,33 @@
         "total_demand_mwh": 47671.83,
         "total_gen_mwh": 48669.4,
         "n_hours": 5750,
+        "total_import_mwh": 15704.03,
+        "total_export_mwh": 14751.21,
+        "total_cost_krw": 1635625651.0,
+        "total_revenue_krw": 2575194782.0,
+        "net_revenue_krw": 939569131.0,
+        "import_mwh_by_period": {
+          "off_peak": 11997.66,
+          "mid_peak": 2726.79,
+          "max_peak": 979.58
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 4925.0,
+          "max_peak": 9826.22
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1081821054.0,
+          "mid_peak": 363421177.0,
+          "max_peak": 190383419.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 667261498.0,
+          "max_peak": 1907933284.0
+        },
+        "avg_import_price_krw_per_mwh": 104153.24,
+        "avg_export_price_krw_per_mwh": 174575.11,
         "flagged_noise_region": false
       }
     },
@@ -564,6 +1212,33 @@
         "total_demand_mwh": 14332.6,
         "total_gen_mwh": 10634.02,
         "n_hours": 5785,
+        "total_import_mwh": 5929.65,
+        "total_export_mwh": 1660.2,
+        "total_cost_krw": 659816810.0,
+        "total_revenue_krw": 308605760.0,
+        "net_revenue_krw": -351211051.0,
+        "import_mwh_by_period": {
+          "off_peak": 3950.01,
+          "mid_peak": 1348.23,
+          "max_peak": 631.42
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 299.83,
+          "max_peak": 1360.37
+        },
+        "cost_krw_by_period": {
+          "off_peak": 355919245.0,
+          "mid_peak": 179064595.0,
+          "max_peak": 124832970.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 41717479.0,
+          "max_peak": 266888281.0
+        },
+        "avg_import_price_krw_per_mwh": 111274.07,
+        "avg_export_price_krw_per_mwh": 185884.64,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -580,6 +1255,33 @@
         "total_demand_mwh": 14332.6,
         "total_gen_mwh": 10634.02,
         "n_hours": 5785,
+        "total_import_mwh": 5929.65,
+        "total_export_mwh": 1660.2,
+        "total_cost_krw": 659816810.0,
+        "total_revenue_krw": 308605760.0,
+        "net_revenue_krw": -351211051.0,
+        "import_mwh_by_period": {
+          "off_peak": 3950.01,
+          "mid_peak": 1348.23,
+          "max_peak": 631.42
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 299.83,
+          "max_peak": 1360.37
+        },
+        "cost_krw_by_period": {
+          "off_peak": 355919245.0,
+          "mid_peak": 179064595.0,
+          "max_peak": 124832970.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 41717479.0,
+          "max_peak": 266888281.0
+        },
+        "avg_import_price_krw_per_mwh": 111274.07,
+        "avg_export_price_krw_per_mwh": 185884.64,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -596,6 +1298,33 @@
         "total_demand_mwh": 14332.6,
         "total_gen_mwh": 10634.02,
         "n_hours": 5785,
+        "total_import_mwh": 6137.95,
+        "total_export_mwh": 1914.61,
+        "total_cost_krw": 672795911.0,
+        "total_revenue_krw": 337141138.0,
+        "net_revenue_krw": -335654773.0,
+        "import_mwh_by_period": {
+          "off_peak": 4193.14,
+          "mid_peak": 1392.47,
+          "max_peak": 552.35
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 642.69,
+          "max_peak": 1271.92
+        },
+        "cost_krw_by_period": {
+          "off_peak": 377628914.0,
+          "mid_peak": 186156845.0,
+          "max_peak": 109010151.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 87455996.0,
+          "max_peak": 249685142.0
+        },
+        "avg_import_price_krw_per_mwh": 109612.39,
+        "avg_export_price_krw_per_mwh": 176088.81,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -612,6 +1341,33 @@
         "total_demand_mwh": 14332.6,
         "total_gen_mwh": 10634.02,
         "n_hours": 5785,
+        "total_import_mwh": 6164.98,
+        "total_export_mwh": 1947.98,
+        "total_cost_krw": 676011688.0,
+        "total_revenue_krw": 343150722.0,
+        "net_revenue_krw": -332860967.0,
+        "import_mwh_by_period": {
+          "off_peak": 4207.63,
+          "mid_peak": 1398.7,
+          "max_peak": 558.65
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 651.2,
+          "max_peak": 1296.78
+        },
+        "cost_krw_by_period": {
+          "off_peak": 378892986.0,
+          "mid_peak": 186790272.0,
+          "max_peak": 110328430.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 88650817.0,
+          "max_peak": 254499905.0
+        },
+        "avg_import_price_krw_per_mwh": 109653.46,
+        "avg_export_price_krw_per_mwh": 176157.54,
         "flagged_noise_region": false
       }
     },
@@ -630,6 +1386,33 @@
         "total_demand_mwh": 79687.4,
         "total_gen_mwh": 93219.34,
         "n_hours": 5740,
+        "total_import_mwh": 24678.15,
+        "total_export_mwh": 34633.84,
+        "total_cost_krw": 2578742804.0,
+        "total_revenue_krw": 5991428304.0,
+        "net_revenue_krw": 3412685500.0,
+        "import_mwh_by_period": {
+          "off_peak": 18576.03,
+          "mid_peak": 4575.54,
+          "max_peak": 1526.58
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 12020.87,
+          "max_peak": 22612.97
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1675340005.0,
+          "mid_peak": 607910024.0,
+          "max_peak": 295492775.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 1640436823.0,
+          "max_peak": 4350991481.0
+        },
+        "avg_import_price_krw_per_mwh": 104494.97,
+        "avg_export_price_krw_per_mwh": 172993.5,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -646,6 +1429,33 @@
         "total_demand_mwh": 79687.4,
         "total_gen_mwh": 93219.34,
         "n_hours": 5740,
+        "total_import_mwh": 24678.15,
+        "total_export_mwh": 34633.84,
+        "total_cost_krw": 2578742804.0,
+        "total_revenue_krw": 5991428304.0,
+        "net_revenue_krw": 3412685500.0,
+        "import_mwh_by_period": {
+          "off_peak": 18576.03,
+          "mid_peak": 4575.54,
+          "max_peak": 1526.58
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 12020.87,
+          "max_peak": 22612.97
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1675340005.0,
+          "mid_peak": 607910024.0,
+          "max_peak": 295492775.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 1640436823.0,
+          "max_peak": 4350991481.0
+        },
+        "avg_import_price_krw_per_mwh": 104494.97,
+        "avg_export_price_krw_per_mwh": 172993.5,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -662,6 +1472,33 @@
         "total_demand_mwh": 79687.4,
         "total_gen_mwh": 93219.34,
         "n_hours": 5740,
+        "total_import_mwh": 25829.29,
+        "total_export_mwh": 36039.59,
+        "total_cost_krw": 2641294991.0,
+        "total_revenue_krw": 6184996952.0,
+        "net_revenue_krw": 3543701961.0,
+        "import_mwh_by_period": {
+          "off_peak": 20405.64,
+          "mid_peak": 4112.76,
+          "max_peak": 1310.9
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 13386.31,
+          "max_peak": 22653.27
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1841168072.0,
+          "mid_peak": 548076194.0,
+          "max_peak": 252050725.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 1804422451.0,
+          "max_peak": 4380574501.0
+        },
+        "avg_import_price_krw_per_mwh": 102259.67,
+        "avg_export_price_krw_per_mwh": 171616.76,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -678,6 +1515,33 @@
         "total_demand_mwh": 79687.4,
         "total_gen_mwh": 93219.34,
         "n_hours": 5740,
+        "total_import_mwh": 25841.65,
+        "total_export_mwh": 36054.83,
+        "total_cost_krw": 2641486578.0,
+        "total_revenue_krw": 6186799991.0,
+        "net_revenue_krw": 3545313413.0,
+        "import_mwh_by_period": {
+          "off_peak": 20420.21,
+          "mid_peak": 4122.62,
+          "max_peak": 1298.81
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 13387.35,
+          "max_peak": 22667.49
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1842440022.0,
+          "mid_peak": 549293810.0,
+          "max_peak": 249752746.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 1804567740.0,
+          "max_peak": 4382232252.0
+        },
+        "avg_import_price_krw_per_mwh": 102218.21,
+        "avg_export_price_krw_per_mwh": 171594.19,
         "flagged_noise_region": false
       }
     },
@@ -696,6 +1560,33 @@
         "total_demand_mwh": 16620.91,
         "total_gen_mwh": 13637.92,
         "n_hours": 5742,
+        "total_import_mwh": 6564.16,
+        "total_export_mwh": 2916.32,
+        "total_cost_krw": 731276185.0,
+        "total_revenue_krw": 514663850.0,
+        "net_revenue_krw": -216612335.0,
+        "import_mwh_by_period": {
+          "off_peak": 4365.23,
+          "mid_peak": 1508.86,
+          "max_peak": 690.06
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 845.41,
+          "max_peak": 2070.92
+        },
+        "cost_krw_by_period": {
+          "off_peak": 393782540.0,
+          "mid_peak": 200170825.0,
+          "max_peak": 137322820.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 117248105.0,
+          "max_peak": 397415745.0
+        },
+        "avg_import_price_krw_per_mwh": 111404.46,
+        "avg_export_price_krw_per_mwh": 176476.9,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -712,6 +1603,33 @@
         "total_demand_mwh": 16620.91,
         "total_gen_mwh": 13637.92,
         "n_hours": 5742,
+        "total_import_mwh": 6564.16,
+        "total_export_mwh": 2916.32,
+        "total_cost_krw": 731276185.0,
+        "total_revenue_krw": 514663850.0,
+        "net_revenue_krw": -216612335.0,
+        "import_mwh_by_period": {
+          "off_peak": 4365.23,
+          "mid_peak": 1508.86,
+          "max_peak": 690.06
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 845.41,
+          "max_peak": 2070.92
+        },
+        "cost_krw_by_period": {
+          "off_peak": 393782540.0,
+          "mid_peak": 200170825.0,
+          "max_peak": 137322820.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 117248105.0,
+          "max_peak": 397415745.0
+        },
+        "avg_import_price_krw_per_mwh": 111404.46,
+        "avg_export_price_krw_per_mwh": 176476.9,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -728,6 +1646,33 @@
         "total_demand_mwh": 16620.91,
         "total_gen_mwh": 13637.92,
         "n_hours": 5742,
+        "total_import_mwh": 6814.97,
+        "total_export_mwh": 3222.75,
+        "total_cost_krw": 745958849.0,
+        "total_revenue_krw": 552219206.0,
+        "net_revenue_krw": -193739643.0,
+        "import_mwh_by_period": {
+          "off_peak": 4682.15,
+          "mid_peak": 1530.19,
+          "max_peak": 602.62
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 1201.99,
+          "max_peak": 2020.76
+        },
+        "cost_krw_by_period": {
+          "off_peak": 422111341.0,
+          "mid_peak": 203835889.0,
+          "max_peak": 120011619.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 163573913.0,
+          "max_peak": 388645293.0
+        },
+        "avg_import_price_krw_per_mwh": 109458.92,
+        "avg_export_price_krw_per_mwh": 171350.09,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -744,6 +1689,33 @@
         "total_demand_mwh": 16620.91,
         "total_gen_mwh": 13637.92,
         "n_hours": 5742,
+        "total_import_mwh": 6813.88,
+        "total_export_mwh": 3221.41,
+        "total_cost_krw": 744730580.0,
+        "total_revenue_krw": 550898516.0,
+        "net_revenue_krw": -193832064.0,
+        "import_mwh_by_period": {
+          "off_peak": 4686.72,
+          "mid_peak": 1541.01,
+          "max_peak": 586.15
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 1219.25,
+          "max_peak": 2002.16
+        },
+        "cost_krw_by_period": {
+          "off_peak": 422509659.0,
+          "mid_peak": 205511868.0,
+          "max_peak": 116709053.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 165996894.0,
+          "max_peak": 384901622.0
+        },
+        "avg_import_price_krw_per_mwh": 109296.19,
+        "avg_export_price_krw_per_mwh": 171011.78,
         "flagged_noise_region": false
       }
     },
@@ -762,6 +1734,33 @@
         "total_demand_mwh": 14733.89,
         "total_gen_mwh": 22559.03,
         "n_hours": 5538,
+        "total_import_mwh": 3994.11,
+        "total_export_mwh": 11145.71,
+        "total_cost_krw": 421981364.0,
+        "total_revenue_krw": 1944962714.0,
+        "net_revenue_krw": 1522981350.0,
+        "import_mwh_by_period": {
+          "off_peak": 2958.69,
+          "mid_peak": 792.46,
+          "max_peak": 242.95
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3646.19,
+          "max_peak": 7499.52
+        },
+        "cost_krw_by_period": {
+          "off_peak": 267623211.0,
+          "mid_peak": 106294331.0,
+          "max_peak": 48063822.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 496187403.0,
+          "max_peak": 1448775310.0
+        },
+        "avg_import_price_krw_per_mwh": 105650.97,
+        "avg_export_price_krw_per_mwh": 174503.31,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -778,6 +1777,33 @@
         "total_demand_mwh": 14733.89,
         "total_gen_mwh": 22559.03,
         "n_hours": 5538,
+        "total_import_mwh": 3994.11,
+        "total_export_mwh": 11145.71,
+        "total_cost_krw": 421981364.0,
+        "total_revenue_krw": 1944962714.0,
+        "net_revenue_krw": 1522981350.0,
+        "import_mwh_by_period": {
+          "off_peak": 2958.69,
+          "mid_peak": 792.46,
+          "max_peak": 242.95
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3646.19,
+          "max_peak": 7499.52
+        },
+        "cost_krw_by_period": {
+          "off_peak": 267623211.0,
+          "mid_peak": 106294331.0,
+          "max_peak": 48063822.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 496187403.0,
+          "max_peak": 1448775310.0
+        },
+        "avg_import_price_krw_per_mwh": 105650.97,
+        "avg_export_price_krw_per_mwh": 174503.31,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -794,6 +1820,33 @@
         "total_demand_mwh": 14733.89,
         "total_gen_mwh": 22559.03,
         "n_hours": 5538,
+        "total_import_mwh": 4229.54,
+        "total_export_mwh": 11434.93,
+        "total_cost_krw": 434943062.0,
+        "total_revenue_krw": 1983537584.0,
+        "net_revenue_krw": 1548594522.0,
+        "import_mwh_by_period": {
+          "off_peak": 3340.49,
+          "mid_peak": 680.38,
+          "max_peak": 208.67
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3944.61,
+          "max_peak": 7490.32
+        },
+        "cost_krw_by_period": {
+          "off_peak": 302005733.0,
+          "mid_peak": 91622017.0,
+          "max_peak": 41315312.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 532223916.0,
+          "max_peak": 1451313668.0
+        },
+        "avg_import_price_krw_per_mwh": 102834.57,
+        "avg_export_price_krw_per_mwh": 173463.05,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -810,6 +1863,33 @@
         "total_demand_mwh": 14733.89,
         "total_gen_mwh": 22559.03,
         "n_hours": 5538,
+        "total_import_mwh": 4215.92,
+        "total_export_mwh": 11418.11,
+        "total_cost_krw": 433075373.0,
+        "total_revenue_krw": 1979989289.0,
+        "net_revenue_krw": 1546913916.0,
+        "import_mwh_by_period": {
+          "off_peak": 3340.51,
+          "mid_peak": 670.95,
+          "max_peak": 204.46
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3947.04,
+          "max_peak": 7471.07
+        },
+        "cost_krw_by_period": {
+          "off_peak": 302021360.0,
+          "mid_peak": 90559107.0,
+          "max_peak": 40494906.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 532564419.0,
+          "max_peak": 1447424870.0
+        },
+        "avg_import_price_krw_per_mwh": 102723.84,
+        "avg_export_price_krw_per_mwh": 173407.79,
         "flagged_noise_region": false
       }
     },
@@ -828,6 +1908,33 @@
         "total_demand_mwh": 765.51,
         "total_gen_mwh": 33277.53,
         "n_hours": 5545,
+        "total_import_mwh": 44.71,
+        "total_export_mwh": 32518.47,
+        "total_cost_krw": 4286894.0,
+        "total_revenue_krw": 5375787789.0,
+        "net_revenue_krw": 5371500896.0,
+        "import_mwh_by_period": {
+          "off_peak": 41.09,
+          "mid_peak": 3.31,
+          "max_peak": 0.31
+        },
+        "export_mwh_by_period": {
+          "off_peak": 165.17,
+          "mid_peak": 13979.29,
+          "max_peak": 18374.02
+        },
+        "cost_krw_by_period": {
+          "off_peak": 3765139.0,
+          "mid_peak": 460731.0,
+          "max_peak": 61023.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 14482720.0,
+          "mid_peak": 1862233579.0,
+          "max_peak": 3499071490.0
+        },
+        "avg_import_price_krw_per_mwh": 95881.1,
+        "avg_export_price_krw_per_mwh": 165314.88,
         "flagged_noise_region": true
       },
       "xgb_no_lookahead": {
@@ -844,6 +1951,33 @@
         "total_demand_mwh": 765.51,
         "total_gen_mwh": 33277.53,
         "n_hours": 5545,
+        "total_import_mwh": 44.71,
+        "total_export_mwh": 32518.47,
+        "total_cost_krw": 4286894.0,
+        "total_revenue_krw": 5375787789.0,
+        "net_revenue_krw": 5371500896.0,
+        "import_mwh_by_period": {
+          "off_peak": 41.09,
+          "mid_peak": 3.31,
+          "max_peak": 0.31
+        },
+        "export_mwh_by_period": {
+          "off_peak": 165.17,
+          "mid_peak": 13979.29,
+          "max_peak": 18374.02
+        },
+        "cost_krw_by_period": {
+          "off_peak": 3765139.0,
+          "mid_peak": 460731.0,
+          "max_peak": 61023.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 14482720.0,
+          "mid_peak": 1862233579.0,
+          "max_peak": 3499071490.0
+        },
+        "avg_import_price_krw_per_mwh": 95881.1,
+        "avg_export_price_krw_per_mwh": 165314.88,
         "flagged_noise_region": true
       },
       "xgb_lookahead": {
@@ -860,6 +1994,33 @@
         "total_demand_mwh": 765.51,
         "total_gen_mwh": 33277.53,
         "n_hours": 5545,
+        "total_import_mwh": 47.23,
+        "total_export_mwh": 32521.59,
+        "total_cost_krw": 4451218.0,
+        "total_revenue_krw": 5375421186.0,
+        "net_revenue_krw": 5370969968.0,
+        "import_mwh_by_period": {
+          "off_peak": 44.96,
+          "mid_peak": 1.96,
+          "max_peak": 0.31
+        },
+        "export_mwh_by_period": {
+          "off_peak": 179.96,
+          "mid_peak": 13969.48,
+          "max_peak": 18372.15
+        },
+        "cost_krw_by_period": {
+          "off_peak": 4115077.0,
+          "mid_peak": 275118.0,
+          "max_peak": 61023.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 15774427.0,
+          "mid_peak": 1860590709.0,
+          "max_peak": 3499056050.0
+        },
+        "avg_import_price_krw_per_mwh": 94237.8,
+        "avg_export_price_krw_per_mwh": 165287.78,
         "flagged_noise_region": true
       },
       "oracle": {
@@ -876,6 +2037,33 @@
         "total_demand_mwh": 765.51,
         "total_gen_mwh": 33277.53,
         "n_hours": 5545,
+        "total_import_mwh": 48.85,
+        "total_export_mwh": 32523.59,
+        "total_cost_krw": 4595736.0,
+        "total_revenue_krw": 5375709080.0,
+        "net_revenue_krw": 5371113344.0,
+        "import_mwh_by_period": {
+          "off_peak": 46.6,
+          "mid_peak": 2.07,
+          "max_peak": 0.18
+        },
+        "export_mwh_by_period": {
+          "off_peak": 179.9,
+          "mid_peak": 13971.48,
+          "max_peak": 18372.2
+        },
+        "cost_krw_by_period": {
+          "off_peak": 4269315.0,
+          "mid_peak": 290141.0,
+          "max_peak": 36279.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 15769250.0,
+          "mid_peak": 1860871783.0,
+          "max_peak": 3499068047.0
+        },
+        "avg_import_price_krw_per_mwh": 94069.43,
+        "avg_export_price_krw_per_mwh": 165286.46,
         "flagged_noise_region": true
       }
     },
@@ -894,6 +2082,33 @@
         "total_demand_mwh": 41991.66,
         "total_gen_mwh": 39455.56,
         "n_hours": 5748,
+        "total_import_mwh": 13568.01,
+        "total_export_mwh": 9347.73,
+        "total_cost_krw": 1546195177.0,
+        "total_revenue_krw": 1694298930.0,
+        "net_revenue_krw": 148103753.0,
+        "import_mwh_by_period": {
+          "off_peak": 8504.53,
+          "mid_peak": 3481.8,
+          "max_peak": 1581.67
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 2143.73,
+          "max_peak": 7204.0
+        },
+        "cost_krw_by_period": {
+          "off_peak": 766799870.0,
+          "mid_peak": 464056693.0,
+          "max_peak": 315338614.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 296447763.0,
+          "max_peak": 1397851167.0
+        },
+        "avg_import_price_krw_per_mwh": 113958.87,
+        "avg_export_price_krw_per_mwh": 181252.51,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -910,6 +2125,33 @@
         "total_demand_mwh": 41991.66,
         "total_gen_mwh": 39455.56,
         "n_hours": 5748,
+        "total_import_mwh": 13568.01,
+        "total_export_mwh": 9347.73,
+        "total_cost_krw": 1546195177.0,
+        "total_revenue_krw": 1694298930.0,
+        "net_revenue_krw": 148103753.0,
+        "import_mwh_by_period": {
+          "off_peak": 8504.53,
+          "mid_peak": 3481.8,
+          "max_peak": 1581.67
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 2143.73,
+          "max_peak": 7204.0
+        },
+        "cost_krw_by_period": {
+          "off_peak": 766799870.0,
+          "mid_peak": 464056693.0,
+          "max_peak": 315338614.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 296447763.0,
+          "max_peak": 1397851167.0
+        },
+        "avg_import_price_krw_per_mwh": 113958.87,
+        "avg_export_price_krw_per_mwh": 181252.51,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -926,6 +2168,33 @@
         "total_demand_mwh": 41991.66,
         "total_gen_mwh": 39455.56,
         "n_hours": 5748,
+        "total_import_mwh": 14179.79,
+        "total_export_mwh": 10094.9,
+        "total_cost_krw": 1567580557.0,
+        "total_revenue_krw": 1781414658.0,
+        "net_revenue_krw": 213834102.0,
+        "import_mwh_by_period": {
+          "off_peak": 9569.69,
+          "mid_peak": 3294.05,
+          "max_peak": 1316.06
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3119.94,
+          "max_peak": 6974.96
+        },
+        "cost_krw_by_period": {
+          "off_peak": 862450894.0,
+          "mid_peak": 442235299.0,
+          "max_peak": 262894364.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 423868517.0,
+          "max_peak": 1357546141.0
+        },
+        "avg_import_price_krw_per_mwh": 110550.33,
+        "avg_export_price_krw_per_mwh": 176466.81,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -942,6 +2211,33 @@
         "total_demand_mwh": 41991.66,
         "total_gen_mwh": 39455.56,
         "n_hours": 5748,
+        "total_import_mwh": 14189.39,
+        "total_export_mwh": 10106.75,
+        "total_cost_krw": 1568328603.0,
+        "total_revenue_krw": 1783970290.0,
+        "net_revenue_krw": 215641687.0,
+        "import_mwh_by_period": {
+          "off_peak": 9588.46,
+          "mid_peak": 3278.35,
+          "max_peak": 1322.58
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3120.43,
+          "max_peak": 6986.32
+        },
+        "cost_krw_by_period": {
+          "off_peak": 864078948.0,
+          "mid_peak": 440130680.0,
+          "max_peak": 264118975.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 423938035.0,
+          "max_peak": 1360032255.0
+        },
+        "avg_import_price_krw_per_mwh": 110528.24,
+        "avg_export_price_krw_per_mwh": 176512.7,
         "flagged_noise_region": false
       }
     },
@@ -960,6 +2256,33 @@
         "total_demand_mwh": 1459329.47,
         "total_gen_mwh": 1606421.89,
         "n_hours": 5698,
+        "total_import_mwh": 347194.5,
+        "total_export_mwh": 418254.52,
+        "total_cost_krw": 46007957120.0,
+        "total_revenue_krw": 60824368054.0,
+        "net_revenue_krw": 14816410934.0,
+        "import_mwh_by_period": {
+          "off_peak": 174368.41,
+          "mid_peak": 84066.98,
+          "max_peak": 88759.1
+        },
+        "export_mwh_by_period": {
+          "off_peak": 129.1,
+          "mid_peak": 143902.77,
+          "max_peak": 274222.64
+        },
+        "cost_krw_by_period": {
+          "off_peak": 15728684458.0,
+          "mid_peak": 11393807295.0,
+          "max_peak": 18885465367.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 12174480.0,
+          "mid_peak": 18401444654.0,
+          "max_peak": 42410748920.0
+        },
+        "avg_import_price_krw_per_mwh": 132513.5,
+        "avg_export_price_krw_per_mwh": 145424.29,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -976,6 +2299,33 @@
         "total_demand_mwh": 1459329.47,
         "total_gen_mwh": 1606421.89,
         "n_hours": 5698,
+        "total_import_mwh": 347194.5,
+        "total_export_mwh": 418254.52,
+        "total_cost_krw": 46007957120.0,
+        "total_revenue_krw": 60824368054.0,
+        "net_revenue_krw": 14816410934.0,
+        "import_mwh_by_period": {
+          "off_peak": 174368.41,
+          "mid_peak": 84066.98,
+          "max_peak": 88759.1
+        },
+        "export_mwh_by_period": {
+          "off_peak": 129.1,
+          "mid_peak": 143902.77,
+          "max_peak": 274222.64
+        },
+        "cost_krw_by_period": {
+          "off_peak": 15728684458.0,
+          "mid_peak": 11393807295.0,
+          "max_peak": 18885465367.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 12174480.0,
+          "mid_peak": 18401444654.0,
+          "max_peak": 42410748920.0
+        },
+        "avg_import_price_krw_per_mwh": 132513.5,
+        "avg_export_price_krw_per_mwh": 145424.29,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -992,6 +2342,33 @@
         "total_demand_mwh": 1459329.47,
         "total_gen_mwh": 1606421.89,
         "n_hours": 5698,
+        "total_import_mwh": 369037.28,
+        "total_export_mwh": 445220.92,
+        "total_cost_krw": 46168869884.0,
+        "total_revenue_krw": 65305147523.0,
+        "net_revenue_krw": 19136277639.0,
+        "import_mwh_by_period": {
+          "off_peak": 216824.49,
+          "mid_peak": 78020.25,
+          "max_peak": 74192.54
+        },
+        "export_mwh_by_period": {
+          "off_peak": 129.1,
+          "mid_peak": 163865.78,
+          "max_peak": 281226.04
+        },
+        "cost_krw_by_period": {
+          "off_peak": 19570056301.0,
+          "mid_peak": 10717877410.0,
+          "max_peak": 15880936173.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 12174480.0,
+          "mid_peak": 20691235741.0,
+          "max_peak": 44601737302.0
+        },
+        "avg_import_price_krw_per_mwh": 125106.25,
+        "avg_export_price_krw_per_mwh": 146680.32,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -1008,6 +2385,33 @@
         "total_demand_mwh": 1459329.47,
         "total_gen_mwh": 1606421.89,
         "n_hours": 5698,
+        "total_import_mwh": 380173.04,
+        "total_export_mwh": 458968.77,
+        "total_cost_krw": 47150133506.0,
+        "total_revenue_krw": 67139456659.0,
+        "net_revenue_krw": 19989323152.0,
+        "import_mwh_by_period": {
+          "off_peak": 227336.24,
+          "mid_peak": 78548.97,
+          "max_peak": 74287.83
+        },
+        "export_mwh_by_period": {
+          "off_peak": 129.1,
+          "mid_peak": 177730.73,
+          "max_peak": 281108.93
+        },
+        "cost_krw_by_period": {
+          "off_peak": 20489884944.0,
+          "mid_peak": 10760164272.0,
+          "max_peak": 15900084290.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 12174480.0,
+          "mid_peak": 22635096890.0,
+          "max_peak": 44492185289.0
+        },
+        "avg_import_price_krw_per_mwh": 124022.82,
+        "avg_export_price_krw_per_mwh": 146283.28,
         "flagged_noise_region": false
       }
     },
@@ -1026,6 +2430,33 @@
         "total_demand_mwh": 432190.49,
         "total_gen_mwh": 704507.69,
         "n_hours": 5732,
+        "total_import_mwh": 88903.83,
+        "total_export_mwh": 340795.7,
+        "total_cost_krw": 9775702802.0,
+        "total_revenue_krw": 58579892872.0,
+        "net_revenue_krw": 48804190070.0,
+        "import_mwh_by_period": {
+          "off_peak": 61623.85,
+          "mid_peak": 19291.41,
+          "max_peak": 7988.57
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 121372.76,
+          "max_peak": 219422.94
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5571253808.0,
+          "mid_peak": 2603904881.0,
+          "max_peak": 1600544114.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 16513268526.0,
+          "max_peak": 42066624346.0
+        },
+        "avg_import_price_krw_per_mwh": 109958.18,
+        "avg_export_price_krw_per_mwh": 171891.52,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -1042,6 +2473,33 @@
         "total_demand_mwh": 432190.49,
         "total_gen_mwh": 704507.69,
         "n_hours": 5732,
+        "total_import_mwh": 88903.83,
+        "total_export_mwh": 340795.7,
+        "total_cost_krw": 9775702802.0,
+        "total_revenue_krw": 58579892872.0,
+        "net_revenue_krw": 48804190070.0,
+        "import_mwh_by_period": {
+          "off_peak": 61623.85,
+          "mid_peak": 19291.41,
+          "max_peak": 7988.57
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 121372.76,
+          "max_peak": 219422.94
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5571253808.0,
+          "mid_peak": 2603904881.0,
+          "max_peak": 1600544114.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 16513268526.0,
+          "max_peak": 42066624346.0
+        },
+        "avg_import_price_krw_per_mwh": 109958.18,
+        "avg_export_price_krw_per_mwh": 171891.52,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -1058,6 +2516,33 @@
         "total_demand_mwh": 432190.49,
         "total_gen_mwh": 704507.69,
         "n_hours": 5732,
+        "total_import_mwh": 94965.33,
+        "total_export_mwh": 348279.04,
+        "total_cost_krw": 10005761840.0,
+        "total_revenue_krw": 59608850089.0,
+        "net_revenue_krw": 49603088249.0,
+        "import_mwh_by_period": {
+          "off_peak": 72740.54,
+          "mid_peak": 15907.53,
+          "max_peak": 6317.27
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 128125.33,
+          "max_peak": 220153.71
+        },
+        "cost_krw_by_period": {
+          "off_peak": 6579349257.0,
+          "mid_peak": 2160660929.0,
+          "max_peak": 1265751655.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 17298921747.0,
+          "max_peak": 42309928342.0
+        },
+        "avg_import_price_krw_per_mwh": 105362.26,
+        "avg_export_price_krw_per_mwh": 171152.56,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -1074,6 +2559,33 @@
         "total_demand_mwh": 432190.49,
         "total_gen_mwh": 704507.69,
         "n_hours": 5732,
+        "total_import_mwh": 94826.47,
+        "total_export_mwh": 348107.61,
+        "total_cost_krw": 9994932619.0,
+        "total_revenue_krw": 59584411530.0,
+        "net_revenue_krw": 49589478911.0,
+        "import_mwh_by_period": {
+          "off_peak": 72641.61,
+          "mid_peak": 15850.23,
+          "max_peak": 6334.63
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 128053.0,
+          "max_peak": 220054.61
+        },
+        "cost_krw_by_period": {
+          "off_peak": 6570331976.0,
+          "mid_peak": 2152743625.0,
+          "max_peak": 1271857017.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 17290236661.0,
+          "max_peak": 42294174869.0
+        },
+        "avg_import_price_krw_per_mwh": 105402.35,
+        "avg_export_price_krw_per_mwh": 171166.64,
         "flagged_noise_region": false
       }
     },
@@ -1092,6 +2604,33 @@
         "total_demand_mwh": 280906.92,
         "total_gen_mwh": 329016.57,
         "n_hours": 5542,
+        "total_import_mwh": 87992.88,
+        "total_export_mwh": 123678.84,
+        "total_cost_krw": 9460219161.0,
+        "total_revenue_krw": 21062078939.0,
+        "net_revenue_krw": 11601859778.0,
+        "import_mwh_by_period": {
+          "off_peak": 64709.21,
+          "mid_peak": 16239.86,
+          "max_peak": 7043.81
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 37522.32,
+          "max_peak": 86156.52
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5837926036.0,
+          "mid_peak": 2199744089.0,
+          "max_peak": 1422549035.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 5058414524.0,
+          "max_peak": 16003664415.0
+        },
+        "avg_import_price_krw_per_mwh": 107511.19,
+        "avg_export_price_krw_per_mwh": 170296.54,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -1108,6 +2647,33 @@
         "total_demand_mwh": 280906.92,
         "total_gen_mwh": 329016.57,
         "n_hours": 5542,
+        "total_import_mwh": 87992.88,
+        "total_export_mwh": 123678.84,
+        "total_cost_krw": 9460219161.0,
+        "total_revenue_krw": 21062078939.0,
+        "net_revenue_krw": 11601859778.0,
+        "import_mwh_by_period": {
+          "off_peak": 64709.21,
+          "mid_peak": 16239.86,
+          "max_peak": 7043.81
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 37522.32,
+          "max_peak": 86156.52
+        },
+        "cost_krw_by_period": {
+          "off_peak": 5837926036.0,
+          "mid_peak": 2199744089.0,
+          "max_peak": 1422549035.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 5058414524.0,
+          "max_peak": 16003664415.0
+        },
+        "avg_import_price_krw_per_mwh": 107511.19,
+        "avg_export_price_krw_per_mwh": 170296.54,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -1124,6 +2690,33 @@
         "total_demand_mwh": 280906.92,
         "total_gen_mwh": 329016.57,
         "n_hours": 5542,
+        "total_import_mwh": 92101.12,
+        "total_export_mwh": 128694.42,
+        "total_cost_krw": 9689011585.0,
+        "total_revenue_krw": 21646961392.0,
+        "net_revenue_krw": 11957949807.0,
+        "import_mwh_by_period": {
+          "off_peak": 71191.96,
+          "mid_peak": 14768.35,
+          "max_peak": 6140.81
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 44064.3,
+          "max_peak": 84630.12
+        },
+        "cost_krw_by_period": {
+          "off_peak": 6419020928.0,
+          "mid_peak": 2023941014.0,
+          "max_peak": 1246049643.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 5868377306.0,
+          "max_peak": 15778584086.0
+        },
+        "avg_import_price_krw_per_mwh": 105199.72,
+        "avg_export_price_krw_per_mwh": 168204.36,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -1140,6 +2733,33 @@
         "total_demand_mwh": 280906.92,
         "total_gen_mwh": 329016.57,
         "n_hours": 5542,
+        "total_import_mwh": 92091.46,
+        "total_export_mwh": 128682.5,
+        "total_cost_krw": 9679797697.0,
+        "total_revenue_krw": 21646978061.0,
+        "net_revenue_krw": 11967180364.0,
+        "import_mwh_by_period": {
+          "off_peak": 71296.46,
+          "mid_peak": 14678.03,
+          "max_peak": 6116.97
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 44064.3,
+          "max_peak": 84618.2
+        },
+        "cost_krw_by_period": {
+          "off_peak": 6428683605.0,
+          "mid_peak": 2011731592.0,
+          "max_peak": 1239382500.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 5868377306.0,
+          "max_peak": 15778600755.0
+        },
+        "avg_import_price_krw_per_mwh": 105110.7,
+        "avg_export_price_krw_per_mwh": 168220.06,
         "flagged_noise_region": false
       }
     },
@@ -1158,6 +2778,33 @@
         "total_demand_mwh": 659862.59,
         "total_gen_mwh": 804878.57,
         "n_hours": 5704,
+        "total_import_mwh": 146967.7,
+        "total_export_mwh": 262454.54,
+        "total_cost_krw": 16785795295.0,
+        "total_revenue_krw": 44302076305.0,
+        "net_revenue_krw": 27516281010.0,
+        "import_mwh_by_period": {
+          "off_peak": 93516.25,
+          "mid_peak": 35855.0,
+          "max_peak": 17596.45
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 67767.94,
+          "max_peak": 194686.6
+        },
+        "cost_krw_by_period": {
+          "off_peak": 8446350888.0,
+          "mid_peak": 4829691790.0,
+          "max_peak": 3509752617.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 9023394500.0,
+          "max_peak": 35278681805.0
+        },
+        "avg_import_price_krw_per_mwh": 114214.18,
+        "avg_export_price_krw_per_mwh": 168799.05,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -1174,6 +2821,33 @@
         "total_demand_mwh": 659862.59,
         "total_gen_mwh": 804878.57,
         "n_hours": 5704,
+        "total_import_mwh": 146967.7,
+        "total_export_mwh": 262454.54,
+        "total_cost_krw": 16785795295.0,
+        "total_revenue_krw": 44302076305.0,
+        "net_revenue_krw": 27516281010.0,
+        "import_mwh_by_period": {
+          "off_peak": 93516.25,
+          "mid_peak": 35855.0,
+          "max_peak": 17596.45
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 67767.94,
+          "max_peak": 194686.6
+        },
+        "cost_krw_by_period": {
+          "off_peak": 8446350888.0,
+          "mid_peak": 4829691790.0,
+          "max_peak": 3509752617.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 9023394500.0,
+          "max_peak": 35278681805.0
+        },
+        "avg_import_price_krw_per_mwh": 114214.18,
+        "avg_export_price_krw_per_mwh": 168799.05,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -1190,6 +2864,33 @@
         "total_demand_mwh": 659862.59,
         "total_gen_mwh": 804878.57,
         "n_hours": 5704,
+        "total_import_mwh": 156061.64,
+        "total_export_mwh": 273681.63,
+        "total_cost_krw": 16985084332.0,
+        "total_revenue_krw": 45558267628.0,
+        "net_revenue_krw": 28573183296.0,
+        "import_mwh_by_period": {
+          "off_peak": 112236.94,
+          "mid_peak": 29829.56,
+          "max_peak": 13995.14
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 84155.43,
+          "max_peak": 189526.2
+        },
+        "cost_krw_by_period": {
+          "off_peak": 10137888590.0,
+          "mid_peak": 4053049624.0,
+          "max_peak": 2794146118.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 11086026342.0,
+          "max_peak": 34472241286.0
+        },
+        "avg_import_price_krw_per_mwh": 108835.74,
+        "avg_export_price_krw_per_mwh": 166464.47,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -1206,6 +2907,33 @@
         "total_demand_mwh": 659862.59,
         "total_gen_mwh": 804878.57,
         "n_hours": 5704,
+        "total_import_mwh": 156116.08,
+        "total_export_mwh": 273748.84,
+        "total_cost_krw": 17009076471.0,
+        "total_revenue_krw": 45545145206.0,
+        "net_revenue_krw": 28536068735.0,
+        "import_mwh_by_period": {
+          "off_peak": 111785.37,
+          "mid_peak": 30445.71,
+          "max_peak": 13885.0
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 84498.36,
+          "max_peak": 189250.49
+        },
+        "cost_krw_by_period": {
+          "off_peak": 10097334706.0,
+          "mid_peak": 4139951550.0,
+          "max_peak": 2771790216.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 11134173786.0,
+          "max_peak": 34410971420.0
+        },
+        "avg_import_price_krw_per_mwh": 108951.47,
+        "avg_export_price_krw_per_mwh": 166375.66,
         "flagged_noise_region": false
       }
     },
@@ -1224,6 +2952,33 @@
         "total_demand_mwh": 209829.3,
         "total_gen_mwh": 273266.59,
         "n_hours": 5421,
+        "total_import_mwh": 34966.11,
+        "total_export_mwh": 88281.08,
+        "total_cost_krw": 4054973424.0,
+        "total_revenue_krw": 15621493618.0,
+        "net_revenue_krw": 11566520194.0,
+        "import_mwh_by_period": {
+          "off_peak": 20418.53,
+          "mid_peak": 10067.08,
+          "max_peak": 4480.5
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 25667.48,
+          "max_peak": 62613.6
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1845062700.0,
+          "mid_peak": 1328019592.0,
+          "max_peak": 881891132.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3524049798.0,
+          "max_peak": 12097443819.0
+        },
+        "avg_import_price_krw_per_mwh": 115968.68,
+        "avg_export_price_krw_per_mwh": 176951.77,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -1240,6 +2995,33 @@
         "total_demand_mwh": 209829.3,
         "total_gen_mwh": 273266.59,
         "n_hours": 5421,
+        "total_import_mwh": 34966.11,
+        "total_export_mwh": 88281.08,
+        "total_cost_krw": 4054973424.0,
+        "total_revenue_krw": 15621493618.0,
+        "net_revenue_krw": 11566520194.0,
+        "import_mwh_by_period": {
+          "off_peak": 20418.53,
+          "mid_peak": 10067.08,
+          "max_peak": 4480.5
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 25667.48,
+          "max_peak": 62613.6
+        },
+        "cost_krw_by_period": {
+          "off_peak": 1845062700.0,
+          "mid_peak": 1328019592.0,
+          "max_peak": 881891132.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 3524049798.0,
+          "max_peak": 12097443819.0
+        },
+        "avg_import_price_krw_per_mwh": 115968.68,
+        "avg_export_price_krw_per_mwh": 176951.77,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -1256,6 +3038,33 @@
         "total_demand_mwh": 209829.3,
         "total_gen_mwh": 273266.59,
         "n_hours": 5421,
+        "total_import_mwh": 38446.55,
+        "total_export_mwh": 92577.92,
+        "total_cost_krw": 4214194469.0,
+        "total_revenue_krw": 16105259136.0,
+        "net_revenue_krw": 11891064668.0,
+        "import_mwh_by_period": {
+          "off_peak": 26495.11,
+          "mid_peak": 8391.17,
+          "max_peak": 3560.26
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 31475.42,
+          "max_peak": 61102.5
+        },
+        "cost_krw_by_period": {
+          "off_peak": 2393211856.0,
+          "mid_peak": 1120411015.0,
+          "max_peak": 700571597.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 4266355720.0,
+          "max_peak": 11838903416.0
+        },
+        "avg_import_price_krw_per_mwh": 109611.78,
+        "avg_export_price_krw_per_mwh": 173964.37,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -1272,6 +3081,33 @@
         "total_demand_mwh": 209829.3,
         "total_gen_mwh": 273266.59,
         "n_hours": 5421,
+        "total_import_mwh": 38424.56,
+        "total_export_mwh": 92550.77,
+        "total_cost_krw": 4207126330.0,
+        "total_revenue_krw": 16098742389.0,
+        "net_revenue_krw": 11891616058.0,
+        "import_mwh_by_period": {
+          "off_peak": 26473.55,
+          "mid_peak": 8442.75,
+          "max_peak": 3508.25
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 31427.68,
+          "max_peak": 61123.09
+        },
+        "cost_krw_by_period": {
+          "off_peak": 2391178453.0,
+          "mid_peak": 1126321943.0,
+          "max_peak": 689625934.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 4259654085.0,
+          "max_peak": 11839088304.0
+        },
+        "avg_import_price_krw_per_mwh": 109490.56,
+        "avg_export_price_krw_per_mwh": 173944.98,
         "flagged_noise_region": false
       }
     }
@@ -1292,6 +3128,11 @@
         "total_demand_mwh": 284039.01,
         "total_gen_mwh": 341632.54,
         "n_hours": 5672.76,
+        "total_import_mwh": 68464.13,
+        "total_export_mwh": 112682.98,
+        "total_cost_krw": 8037973201.06,
+        "total_revenue_krw": 18806192277.82,
+        "net_revenue_krw": 10768219076.71,
         "n_regions": 17
       },
       "xgb_no_lookahead": {
@@ -1308,6 +3149,11 @@
         "total_demand_mwh": 284039.01,
         "total_gen_mwh": 341632.54,
         "n_hours": 5672.76,
+        "total_import_mwh": 68464.13,
+        "total_export_mwh": 112682.98,
+        "total_cost_krw": 8037973201.06,
+        "total_revenue_krw": 18806192277.82,
+        "net_revenue_krw": 10768219076.71,
         "n_regions": 17
       },
       "xgb_lookahead": {
@@ -1324,6 +3170,11 @@
         "total_demand_mwh": 284039.01,
         "total_gen_mwh": 341632.54,
         "n_hours": 5672.76,
+        "total_import_mwh": 72548.29,
+        "total_export_mwh": 117716.18,
+        "total_cost_krw": 8148086145.47,
+        "total_revenue_krw": 19480258924.65,
+        "net_revenue_krw": 11332172779.24,
         "n_regions": 17
       },
       "oracle": {
@@ -1340,6 +3191,11 @@
         "total_demand_mwh": 284039.01,
         "total_gen_mwh": 341632.54,
         "n_hours": 5672.76,
+        "total_import_mwh": 73179.48,
+        "total_export_mwh": 118495.43,
+        "total_cost_krw": 8204126974.53,
+        "total_revenue_krw": 19580830212.65,
+        "net_revenue_krw": 11376703237.88,
         "n_regions": 17
       }
     },
@@ -1358,6 +3214,11 @@
         "total_demand_mwh": 301743.61,
         "total_gen_mwh": 360904.72,
         "n_hours": 5680.75,
+        "total_import_mwh": 72740.35,
+        "total_export_mwh": 117693.27,
+        "total_cost_krw": 8540078595.25,
+        "total_revenue_krw": 19645592558.38,
+        "net_revenue_krw": 11105513963.0,
         "n_regions": 16
       },
       "xgb_no_lookahead": {
@@ -1374,6 +3235,11 @@
         "total_demand_mwh": 301743.61,
         "total_gen_mwh": 360904.72,
         "n_hours": 5680.75,
+        "total_import_mwh": 72740.35,
+        "total_export_mwh": 117693.27,
+        "total_cost_krw": 8540078595.25,
+        "total_revenue_krw": 19645592558.38,
+        "net_revenue_krw": 11105513963.0,
         "n_regions": 16
       },
       "xgb_lookahead": {
@@ -1390,6 +3256,11 @@
         "total_demand_mwh": 301743.61,
         "total_gen_mwh": 360904.72,
         "n_hours": 5680.75,
+        "total_import_mwh": 77079.6,
+        "total_export_mwh": 123040.84,
+        "total_cost_krw": 8657063328.44,
+        "total_revenue_krw": 20361811283.31,
+        "net_revenue_krw": 11704747954.94,
         "n_regions": 16
       },
       "oracle": {
@@ -1406,6 +3277,11 @@
         "total_demand_mwh": 301743.61,
         "total_gen_mwh": 360904.72,
         "n_hours": 5680.75,
+        "total_import_mwh": 77750.15,
+        "total_export_mwh": 123868.68,
+        "total_cost_krw": 8716597676.94,
+        "total_revenue_krw": 20468650283.44,
+        "net_revenue_krw": 11752052606.25,
         "n_regions": 16
       }
     },
@@ -1424,6 +3300,11 @@
         "total_demand_mwh": 726497.8,
         "total_gen_mwh": 842483.71,
         "n_hours": 5676.94,
+        "total_import_mwh": 171401.84,
+        "total_export_mwh": 251582.69,
+        "total_cost_krw": 21319002857.29,
+        "total_revenue_krw": 39983014717.72,
+        "net_revenue_krw": 18664011860.38,
         "n_regions": 17
       },
       "xgb_no_lookahead": {
@@ -1440,6 +3321,11 @@
         "total_demand_mwh": 726497.8,
         "total_gen_mwh": 842483.71,
         "n_hours": 5676.94,
+        "total_import_mwh": 171401.84,
+        "total_export_mwh": 251582.69,
+        "total_cost_krw": 21319002857.29,
+        "total_revenue_krw": 39983014717.72,
+        "net_revenue_krw": 18664011860.38,
         "n_regions": 17
       },
       "xgb_lookahead": {
@@ -1456,6 +3342,11 @@
         "total_demand_mwh": 726497.8,
         "total_gen_mwh": 842483.71,
         "n_hours": 5676.94,
+        "total_import_mwh": 181997.29,
+        "total_export_mwh": 264657.49,
+        "total_cost_krw": 21499703005.33,
+        "total_revenue_krw": 41919189507.12,
+        "net_revenue_krw": 20419486501.77,
         "n_regions": 17
       },
       "oracle": {
@@ -1472,6 +3363,11 @@
         "total_demand_mwh": 726497.8,
         "total_gen_mwh": 842483.71,
         "n_hours": 5676.94,
+        "total_import_mwh": 185314.47,
+        "total_export_mwh": 268752.77,
+        "total_cost_krw": 21794285816.93,
+        "total_revenue_krw": 42459155499.9,
+        "net_revenue_krw": 20664869682.5,
         "n_regions": 17
       }
     },
@@ -1490,6 +3386,33 @@
         "total_demand_mwh": 4936800.0,
         "total_gen_mwh": 5807753.14,
         "n_hours": 5808,
+        "total_import_mwh": 968019.06,
+        "total_export_mwh": 1613670.67,
+        "total_cost_krw": 106099556390.0,
+        "total_revenue_krw": 268145433123.0,
+        "net_revenue_krw": 162045876733.0,
+        "import_mwh_by_period": {
+          "off_peak": 662274.99,
+          "mid_peak": 224727.43,
+          "max_peak": 81016.63
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 449711.87,
+          "max_peak": 1163958.8
+        },
+        "cost_krw_by_period": {
+          "off_peak": 59764123526.0,
+          "mid_peak": 30218684726.0,
+          "max_peak": 16116748137.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 60695936438.0,
+          "max_peak": 207449496685.0
+        },
+        "avg_import_price_krw_per_mwh": 109604.82,
+        "avg_export_price_krw_per_mwh": 166171.1,
         "flagged_noise_region": false
       },
       "xgb_no_lookahead": {
@@ -1506,6 +3429,33 @@
         "total_demand_mwh": 4936800.0,
         "total_gen_mwh": 5807753.14,
         "n_hours": 5808,
+        "total_import_mwh": 968019.06,
+        "total_export_mwh": 1613670.67,
+        "total_cost_krw": 106099556390.0,
+        "total_revenue_krw": 268145433123.0,
+        "net_revenue_krw": 162045876733.0,
+        "import_mwh_by_period": {
+          "off_peak": 662274.99,
+          "mid_peak": 224727.43,
+          "max_peak": 81016.63
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 449711.87,
+          "max_peak": 1163958.8
+        },
+        "cost_krw_by_period": {
+          "off_peak": 59764123526.0,
+          "mid_peak": 30218684726.0,
+          "max_peak": 16116748137.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 60695936438.0,
+          "max_peak": 207449496685.0
+        },
+        "avg_import_price_krw_per_mwh": 109604.82,
+        "avg_export_price_krw_per_mwh": 166171.1,
         "flagged_noise_region": false
       },
       "xgb_lookahead": {
@@ -1522,6 +3472,33 @@
         "total_demand_mwh": 4936800.0,
         "total_gen_mwh": 5807753.14,
         "n_hours": 5808,
+        "total_import_mwh": 1033903.34,
+        "total_export_mwh": 1694844.19,
+        "total_cost_krw": 107834692571.0,
+        "total_revenue_krw": 276756637070.0,
+        "net_revenue_krw": 168921944499.0,
+        "import_mwh_by_period": {
+          "off_peak": 797933.38,
+          "mid_peak": 178291.35,
+          "max_peak": 57678.61
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 570788.3,
+          "max_peak": 1124055.88
+        },
+        "cost_krw_by_period": {
+          "off_peak": 72040061263.0,
+          "mid_peak": 24341264653.0,
+          "max_peak": 11453366655.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 75879264637.0,
+          "max_peak": 200877372432.0
+        },
+        "avg_import_price_krw_per_mwh": 104298.62,
+        "avg_export_price_krw_per_mwh": 163293.26,
         "flagged_noise_region": false
       },
       "oracle": {
@@ -1538,6 +3515,33 @@
         "total_demand_mwh": 4936800.0,
         "total_gen_mwh": 5807753.14,
         "n_hours": 5808,
+        "total_import_mwh": 1034376.5,
+        "total_export_mwh": 1695428.33,
+        "total_cost_krw": 107782704534.0,
+        "total_revenue_krw": 276855849980.0,
+        "net_revenue_krw": 169073145447.0,
+        "import_mwh_by_period": {
+          "off_peak": 800039.8,
+          "mid_peak": 177420.74,
+          "max_peak": 56915.96
+        },
+        "export_mwh_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 570792.36,
+          "max_peak": 1124635.97
+        },
+        "cost_krw_by_period": {
+          "off_peak": 72224259237.0,
+          "mid_peak": 24235273523.0,
+          "max_peak": 11323171773.0
+        },
+        "revenue_krw_by_period": {
+          "off_peak": 0.0,
+          "mid_peak": 75879834012.0,
+          "max_peak": 200976015969.0
+        },
+        "avg_import_price_krw_per_mwh": 104200.65,
+        "avg_export_price_krw_per_mwh": 163295.52,
         "flagged_noise_region": false
       }
     }

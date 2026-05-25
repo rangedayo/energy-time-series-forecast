@@ -97,6 +97,49 @@ def get_demand_at_hour(base_demand: float, hour: int) -> float:
     return base_demand * HOURLY_LOAD_FACTOR[hour]
 
 
+# ── TOU(Time-of-Use) 단가 ────────────────────────────────────────────────────
+# 출처: KEPCO 산업용(을) 고압A 선택Ⅱ, 2023-05-16 시행본, 평일 기준 (원/kWh).
+# 단순화 가정: 기본요금/부가세/기후환경요금/연료비조정요금/토·공휴일 특례 미적용.
+# 매수가 = 매도가 (양방향 동일 가격).
+TOU_PRICES_KRW_PER_KWH = {
+    "summer":        {"off_peak": 87.3, "mid_peak": 140.2, "max_peak": 222.3},
+    "spring_autumn": {"off_peak": 87.3, "mid_peak": 109.8, "max_peak": 140.5},
+    "winter":        {"off_peak": 94.3, "mid_peak": 140.4, "max_peak": 197.9},
+}
+
+
+def get_season(month: int) -> str:
+    """월 → 계절 구분."""
+    if month in (6, 7, 8):
+        return "summer"
+    if month in (3, 4, 5, 9, 10):
+        return "spring_autumn"
+    return "winter"  # 11, 12, 1, 2
+
+
+def get_load_period(month: int, hour: int) -> str:
+    """월·시간 → 부하 구분 (경부하/중간부하/최대부하). 평일 기준."""
+    if month in (11, 12, 1, 2):  # 겨울철
+        if 22 <= hour or hour < 8:
+            return "off_peak"
+        if hour in (9, 10, 11, 16, 17, 18):
+            return "max_peak"
+        return "mid_peak"  # 8, 12, 13, 14, 15, 19, 20, 21
+    # 여름·봄·가을철
+    if 22 <= hour or hour < 8:
+        return "off_peak"
+    if hour in (11, 13, 14, 15, 16, 17):
+        return "max_peak"
+    return "mid_peak"  # 8, 9, 10, 12, 18, 19, 20, 21
+
+
+def get_tou_price_krw_per_mwh(month: int, hour: int) -> float:
+    """월·시간 → 단가 (원/MWh). 시뮬은 MWh 단위이므로 ×1000 환산 완료."""
+    season = get_season(month)
+    period = get_load_period(month, hour)
+    return TOU_PRICES_KRW_PER_KWH[season][period] * 1000.0
+
+
 # ── 검증 출력 ─────────────────────────────────────────────────────────────────
 TRAIN_FEATURES = "data/processed/national_train_features.csv"
 SHARE_DIR = Path("claude_share")

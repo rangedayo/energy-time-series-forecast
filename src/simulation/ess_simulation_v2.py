@@ -34,7 +34,10 @@ from src.simulation.ess_config_v2 import (
     TOTAL_ESS_CAPACITY_MWH, TOTAL_DEMAND_MWH_PER_H,
     TOTAL_CHARGE_RATE_MAX, TOTAL_DISCHARGE_RATE_MAX,
     get_demand_at_hour, build_region_params,
+    get_tou_price_krw_per_mwh, get_load_period,
 )
+
+PERIODS = ("off_peak", "mid_peak", "max_peak")
 from src.simulation.ess_policy_v2 import (
     policy_naive, policy_lookahead, policy_perfect_foresight,
     policy_xgb_no_lookahead,
@@ -54,6 +57,7 @@ TRAIN_FEATURES = "data/processed/national_train_features.csv"
 OUT_JSON = Path("outputs/ess_v2_simulation_results.json")
 OUT_PNG_COMPARISON = Path("outputs/ess_v2_comparison.png")
 OUT_PNG_REGION = Path("outputs/ess_v2_region_breakdown.png")
+OUT_MD_TOU_BREAKDOWN = Path("outputs/ess_v2_tou_breakdown.md")
 SHARE_DIR = Path("claude_share")
 
 # 집계 대상 수치 지표 키
@@ -62,13 +66,18 @@ METRIC_KEYS = [
     "total_shortage_mwh", "mean_shortage_mwh", "max_shortage_mwh",
     "curtailment_rate_pct", "shortage_count", "battery_cycles", "ess_score",
     "total_curtailment_mwh", "total_demand_mwh", "total_gen_mwh", "n_hours",
+    # TOU 계측 지표 (의사결정엔 영향 없음, 측정만)
+    "total_import_mwh", "total_export_mwh",
+    "total_cost_krw", "total_revenue_krw", "net_revenue_krw",
 ]
 
 
 # ════════════════════════════════════════════════════════════════════════════
 # TASK G-3 — 시뮬레이터 본체
 # ════════════════════════════════════════════════════════════════════════════
-def run_simulation(actual, predicted, hours, params, policy_fn, policy_kwargs=None):
+def run_simulation(actual, predicted, hours, params, policy_fn,
+                   policy_kwargs=None, months=None,
+                   policy_name=None, verbose=False):
     """
     한 (지역, 정책) 조합에 대한 단일 시뮬레이션 실행.
 
@@ -80,8 +89,13 @@ def run_simulation(actual, predicted, hours, params, policy_fn, policy_kwargs=No
       total_shortage_mwh — 부족의 총량(절대값). 0에 가까울수록 좋음.
       mean_shortage_mwh  — 부족 발생 시 평균 강도. 진단용.
       max_shortage_mwh   — 최악 부족 시점. 극단 시나리오 대응력.
+
+    TOU(시간대별 요금) 계측:
+      months 가 주어지면 매 시점 단가를 적용해 비용(import)·수익(export)을 누적.
+      None 이면 TOU 계측을 건너뛴다(기존 호환). 의사결정 로직은 절대 바꾸지 않음.
     """
     policy_kwargs = policy_kwargs or {}
+    use_tou = months is not None
 
     n = len(actual)
     soc = SOC_INIT
@@ -91,6 +105,18 @@ def run_simulation(actual, predicted, hours, params, policy_fn, policy_kwargs=No
     shortage_list = []
     charge_cycles = 0.0
     discharge_cycles = 0.0
+
+    # TOU 누적자
+    total_import_mwh = 0.0
+    total_export_mwh = 0.0
+    total_cost_krw = 0.0
+    total_revenue_krw = 0.0
+
+    # TOU 부하구분(off/mid/max)별 누적자 — 의사결정에 영향 없음, 측정만
+    import_mwh_by_period = {p: 0.0 for p in PERIODS}
+    export_mwh_by_period = {p: 0.0 for p in PERIODS}
+    cost_krw_by_period = {p: 0.0 for p in PERIODS}
+    revenue_krw_by_period = {p: 0.0 for p in PERIODS}
 
     cap = params["ess_capacity_mwh"]
     base_demand = params["demand_mwh_per_h"]
@@ -109,13 +135,27 @@ def run_simulation(actual, predicted, hours, params, policy_fn, policy_kwargs=No
 
         actual_net = gen - demand_t
 
+        if use_tou:
+            month_t = int(months[i])
+            price_t = get_tou_price_krw_per_mwh(month_t, h)
+            period_t = get_load_period(month_t, h)
+        else:
+            price_t = 0.0
+            period_t = None
+
         if actual_net > 0:
             # 잉여 → 충전
             max_storable = max(0.0, (soc_target_high - soc) * cap / EFFICIENCY)
             charge_amount = min(actual_net, chg_max, max_storable)
             soc += charge_amount * EFFICIENCY / cap
             charge_cycles += charge_amount / cap
-            total_curtailment += actual_net - charge_amount
+            export_mwh = actual_net - charge_amount
+            total_curtailment += export_mwh
+            if use_tou and export_mwh > 0:
+                total_export_mwh += export_mwh
+                total_revenue_krw += export_mwh * price_t
+                export_mwh_by_period[period_t] += export_mwh
+                revenue_krw_by_period[period_t] += export_mwh * price_t
         else:
             # 부족 → 방전
             needed = -actual_net
@@ -128,6 +168,11 @@ def run_simulation(actual, predicted, hours, params, policy_fn, policy_kwargs=No
             if shortfall > 0:
                 shortage_list.append(shortfall)
                 total_shortage_mwh += shortfall
+                if use_tou:
+                    total_import_mwh += shortfall
+                    total_cost_krw += shortfall * price_t
+                    import_mwh_by_period[period_t] += shortfall
+                    cost_krw_by_period[period_t] += shortfall * price_t
 
     total_gen = float(np.sum(actual))
     curtailment_rate = total_curtailment / max(total_gen, 1e-10) * 100.0
@@ -137,6 +182,26 @@ def run_simulation(actual, predicted, hours, params, policy_fn, policy_kwargs=No
 
     shortage_count = len(shortage_list)
     ess_score = (1.0 - curtailment_rate / 100.0) * (1.0 - shortage_count / max(n, 1)) * 100.0
+
+    net_revenue_krw = total_revenue_krw - total_cost_krw
+
+    avg_import_price = (
+        total_cost_krw / total_import_mwh if total_import_mwh > 0 else 0.0
+    )
+    avg_export_price = (
+        total_revenue_krw / total_export_mwh if total_export_mwh > 0 else 0.0
+    )
+
+    if verbose and use_tou:
+        label = policy_name or "(unnamed)"
+        print(f"[TOU 검증] 정책: {label}")
+        print(f"  총 import: {total_import_mwh:>14,.1f} MWh")
+        print(f"  총 export: {total_export_mwh:>14,.1f} MWh")
+        print(f"  총 비용:   {total_cost_krw:>14,.0f} 원 "
+              f"(평균 단가: {avg_import_price:,.0f} 원/MWh)")
+        print(f"  총 수익:   {total_revenue_krw:>14,.0f} 원 "
+              f"(평균 단가: {avg_export_price:,.0f} 원/MWh)")
+        print(f"  순수익:    {net_revenue_krw:>+14,.0f} 원")
 
     return {
         # 신규 지표 (국제 표준)
@@ -157,6 +222,21 @@ def run_simulation(actual, predicted, hours, params, policy_fn, policy_kwargs=No
         "total_demand_mwh": round(total_demand_mwh, 2),
         "total_gen_mwh": round(total_gen, 2),
         "n_hours": int(n),
+
+        # TOU 계측 (months=None 호출이면 0.0 으로 기록)
+        "total_import_mwh": round(total_import_mwh, 2),
+        "total_export_mwh": round(total_export_mwh, 2),
+        "total_cost_krw": round(total_cost_krw, 0),
+        "total_revenue_krw": round(total_revenue_krw, 0),
+        "net_revenue_krw": round(net_revenue_krw, 0),
+
+        # TOU 부하구분(off/mid/max)별 분해 — 의사결정 무관, 측정만
+        "import_mwh_by_period": {p: round(import_mwh_by_period[p], 2) for p in PERIODS},
+        "export_mwh_by_period": {p: round(export_mwh_by_period[p], 2) for p in PERIODS},
+        "cost_krw_by_period": {p: round(cost_krw_by_period[p], 0) for p in PERIODS},
+        "revenue_krw_by_period": {p: round(revenue_krw_by_period[p], 0) for p in PERIODS},
+        "avg_import_price_krw_per_mwh": round(avg_import_price, 2),
+        "avg_export_price_krw_per_mwh": round(avg_export_price, 2),
 
         # 노이즈 플래그 (울산시 등 weight < 임계 지역)
         "flagged_noise_region": bool(params.get("is_noise_region", False)),
@@ -242,6 +322,170 @@ def make_region_breakdown_png(region_results, regions, path):
     plt.close(fig)
 
 
+def _write_tou_breakdown_md(national_sum, path):
+    """전국 합산 시뮬 결과를 부하구분별로 분해한 표 A~D 를 markdown 으로 출력."""
+    baseline = national_sum["naive_baseline"]
+
+    def _pct(part, total):
+        return (part / total * 100.0) if total > 0 else 0.0
+
+    lines = []
+    lines.append("# ESS v2 — TOU 거래 패턴 세부 분석 (전국 합산 시뮬 기준)")
+    lines.append("")
+    lines.append(f"생성 시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    lines.append("")
+
+    # ── 표 A: 매도(export) 시간대별 분포 ─────────────────────────────────────
+    lines.append("## 표 A. 매도(export) 시간대별 분포 (MWh)")
+    lines.append("")
+    lines.append("| 정책 | off_peak | mid_peak | max_peak | 합계 | max_peak 비중(%) |")
+    lines.append("|---|---:|---:|---:|---:|---:|")
+    for s in SCENARIO_ORDER:
+        m = national_sum[s]
+        exp = m["export_mwh_by_period"]
+        tot = m["total_export_mwh"]
+        share = _pct(exp["max_peak"], tot)
+        lines.append(
+            f"| {s} | {exp['off_peak']:,.1f} | {exp['mid_peak']:,.1f} | "
+            f"{exp['max_peak']:,.1f} | {tot:,.1f} | {share:.2f} |"
+        )
+    lines.append("")
+
+    # ── 표 B: 매수(import) 시간대별 분포 ─────────────────────────────────────
+    lines.append("## 표 B. 매수(import) 시간대별 분포 (MWh)")
+    lines.append("")
+    lines.append("| 정책 | off_peak | mid_peak | max_peak | 합계 | off_peak 비중(%) |")
+    lines.append("|---|---:|---:|---:|---:|---:|")
+    for s in SCENARIO_ORDER:
+        m = national_sum[s]
+        imp = m["import_mwh_by_period"]
+        tot = m["total_import_mwh"]
+        share = _pct(imp["off_peak"], tot)
+        lines.append(
+            f"| {s} | {imp['off_peak']:,.1f} | {imp['mid_peak']:,.1f} | "
+            f"{imp['max_peak']:,.1f} | {tot:,.1f} | {share:.2f} |"
+        )
+    lines.append("")
+
+    # ── 표 C: 평균 단가 ──────────────────────────────────────────────────────
+    lines.append("## 표 C. 평균 단가 (원/MWh)")
+    lines.append("")
+    lines.append("| 정책 | 평균 매수 단가 | 평균 매도 단가 | 매도-매수 스프레드 |")
+    lines.append("|---|---:|---:|---:|")
+    for s in SCENARIO_ORDER:
+        m = national_sum[s]
+        buy = m["avg_import_price_krw_per_mwh"]
+        sell = m["avg_export_price_krw_per_mwh"]
+        spread = sell - buy
+        lines.append(
+            f"| {s} | {buy:,.0f} | {sell:,.0f} | {spread:+,.0f} |"
+        )
+    lines.append("")
+
+    # ── 표 D: 정책 간 차이 (vs naive_baseline) ───────────────────────────────
+    lines.append("## 표 D. 정책 간 차이 (vs naive_baseline)")
+    lines.append("")
+    lines.append("| 정책 | 자급률 차이(pt) | net_revenue 차이(원) | "
+                 "max_peak export 차이(MWh) | off_peak import 차이(MWh) |")
+    lines.append("|---|---:|---:|---:|---:|")
+    base_ss = baseline["self_sufficiency_rate_pct"]
+    base_net = baseline["net_revenue_krw"]
+    base_exp_max = baseline["export_mwh_by_period"]["max_peak"]
+    base_imp_off = baseline["import_mwh_by_period"]["off_peak"]
+    for s in SCENARIO_ORDER:
+        m = national_sum[s]
+        d_ss = m["self_sufficiency_rate_pct"] - base_ss
+        d_net = m["net_revenue_krw"] - base_net
+        d_exp_max = m["export_mwh_by_period"]["max_peak"] - base_exp_max
+        d_imp_off = m["import_mwh_by_period"]["off_peak"] - base_imp_off
+        lines.append(
+            f"| {s} | {d_ss:+.2f} | {d_net:+,.0f} | "
+            f"{d_exp_max:+,.1f} | {d_imp_off:+,.1f} |"
+        )
+    lines.append("")
+
+    # ── 검증 노트 ────────────────────────────────────────────────────────────
+    lines.append("## 검증 노트")
+    lines.append("")
+    lines.append("- `sum(*_by_period)` 가 기존 총합과 일치하는지(±1e-6) 자동 점검 — "
+                 "콘솔 로그 참조.")
+    lines.append("- 평균 매수/매도 단가는 KEPCO 산업용(을) 고압A 선택Ⅱ 평일 단가 "
+                 "범위(87,300 ~ 222,300 원/MWh) 안에 있어야 정상.")
+    lines.append("- naive_baseline 과 xgb_no_lookahead 의 모든 거래 지표가 "
+                 "동일해야 함(두 정책의 SOC 결정이 동일).")
+
+    path.parent.mkdir(exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+
+def _verify_tou_breakdown(national_sum):
+    """검증 체크리스트 — 분해 합계가 총합과 일치하는지, 단가 범위, 정책 동일성."""
+    ok = True
+    for s in SCENARIO_ORDER:
+        m = national_sum[s]
+        checks = [
+            (sum(m["import_mwh_by_period"].values()), m["total_import_mwh"],
+             f"{s} import 합계"),
+            (sum(m["export_mwh_by_period"].values()), m["total_export_mwh"],
+             f"{s} export 합계"),
+            (sum(m["cost_krw_by_period"].values()), m["total_cost_krw"],
+             f"{s} cost 합계"),
+            (sum(m["revenue_krw_by_period"].values()), m["total_revenue_krw"],
+             f"{s} revenue 합계"),
+        ]
+        for got, expected, label in checks:
+            tol = max(1.0, abs(expected) * 1e-6)
+            if abs(got - expected) > tol:
+                print(f"  ✗ {label}: {got:,.2f} vs {expected:,.2f} (diff={got - expected:+,.4f})")
+                ok = False
+        # 단가 범위(0 이 아니면 검사)
+        for label, v in (("매수", m["avg_import_price_krw_per_mwh"]),
+                         ("매도", m["avg_export_price_krw_per_mwh"])):
+            if v > 0 and not (87_300 <= v <= 222_300):
+                print(f"  ⚠ {s} 평균 {label} 단가 범위 밖: {v:,.0f} 원/MWh")
+                ok = False
+
+    # naive vs xgb_no_lookahead — 모든 거래 지표 동일성
+    a, b = national_sum["naive_baseline"], national_sum["xgb_no_lookahead"]
+    for key in ("total_import_mwh", "total_export_mwh",
+                "total_cost_krw", "total_revenue_krw"):
+        if abs(a[key] - b[key]) > 1.0:
+            print(f"  ✗ naive vs xgb_no_lookahead {key} 불일치: "
+                  f"{a[key]:,.2f} vs {b[key]:,.2f}")
+            ok = False
+    for p in PERIODS:
+        if abs(a["import_mwh_by_period"][p] - b["import_mwh_by_period"][p]) > 1e-3:
+            print(f"  ✗ naive vs xgb_no_lookahead import[{p}] 불일치")
+            ok = False
+        if abs(a["export_mwh_by_period"][p] - b["export_mwh_by_period"][p]) > 1e-3:
+            print(f"  ✗ naive vs xgb_no_lookahead export[{p}] 불일치")
+            ok = False
+
+    if ok:
+        print(f"[{ts()}] ✓ TOU breakdown 검증 통과 (합계 일치 / 단가 범위 / naive↔no_lookahead 동일)")
+    else:
+        print(f"[{ts()}] ✗ TOU breakdown 검증 실패 — 위 항목 확인")
+    return ok
+
+
+def _print_tou_table(national_sum):
+    """섹션 10 보고 표 — 전국 합산 시뮬 기준 TOU 수익 비교."""
+    print("=" * 88)
+    print("[ESS v2 TOU 결과 — 전국 합산 시뮬 기준]")
+    print("=" * 88)
+    print(f"{'정책':<20}{'자급률(%)':>12}{'net_revenue(원)':>22}"
+          f"{'total_cost(원)':>18}{'total_revenue(원)':>20}")
+    print("─" * 88)
+    for s in SCENARIO_ORDER:
+        m = national_sum[s]
+        print(f"{s:<20}{m['self_sufficiency_rate_pct']:>11.2f} "
+              f"{m['net_revenue_krw']:>+21,.0f} "
+              f"{m['total_cost_krw']:>17,.0f} "
+              f"{m['total_revenue_krw']:>19,.0f}")
+    print("=" * 88)
+
+
 def _print_weighted_table(wavg):
     print("=" * 64)
     print("[전국 ESS v2 시뮬레이션 결과 — 가중 평균 기준]")
@@ -297,6 +541,7 @@ def main():
     for region in regions_all:
         r_df = xgb_df[xgb_df["region"] == region].sort_values("timestamp")
         hours = r_df["timestamp"].dt.hour.values
+        months = r_df["timestamp"].dt.month.values
         actual_arr = r_df["actual"].values.astype(float)
         pred_arr = r_df["predicted"].values.astype(float)
         params = region_params[region]
@@ -306,6 +551,7 @@ def main():
             pred_input = actual_arr if pred_source == "actual" else pred_arr
             region_results[region][scen_name] = run_simulation(
                 actual_arr, pred_input, hours, params, policy_fn,
+                months=months,
             )
             n_sims += 1
     print(f"[{ts()}] 지역별 시뮬 완료 — {n_sims}개 "
@@ -329,6 +575,7 @@ def main():
            .agg(actual=("actual", "sum"), predicted=("predicted", "sum"))
            .sort_values("timestamp"))
     nat_hours = nat["timestamp"].dt.hour.values
+    nat_months = nat["timestamp"].dt.month.values
     nat_actual = nat["actual"].values.astype(float)
     nat_pred = nat["predicted"].values.astype(float)
     total_params = {
@@ -340,10 +587,12 @@ def main():
         "is_noise_region": False,
     }
     national_sum = {}
+    print(f"\n[{ts()}] 전국 합산 시뮬 — TOU sanity check (정책별 1회씩 출력)")
     for scen_name, (policy_fn, pred_source) in SCENARIOS.items():
         pred_input = nat_actual if pred_source == "actual" else nat_pred
         national_sum[scen_name] = run_simulation(
             nat_actual, pred_input, nat_hours, total_params, policy_fn,
+            months=nat_months, policy_name=scen_name, verbose=True,
         )
     print(f"[{ts()}] 3가지 집계 완료 (단순17/단순16/가중/합산)")
 
@@ -395,11 +644,19 @@ def main():
     # ── stdout 요약 ──────────────────────────────────────────────────────────
     print()
     _print_weighted_table(weighted)
+    print()
+    _print_tou_table(national_sum)
+
+    # ── TOU 부하구분별 분해 표 출력 + 검증 ──────────────────────────────────
+    _write_tou_breakdown_md(national_sum, OUT_MD_TOU_BREAKDOWN)
+    print(f"\n[{ts()}] TOU 분해 표 저장 → {OUT_MD_TOU_BREAKDOWN}")
+    _verify_tou_breakdown(national_sum)
 
     # ── claude_share 복사 ────────────────────────────────────────────────────
     print(f"\n[{ts()}] claude_share 복사 중...")
     SHARE_DIR.mkdir(exist_ok=True)
-    for src in (Path(__file__), OUT_JSON, OUT_PNG_COMPARISON, OUT_PNG_REGION):
+    for src in (Path(__file__), OUT_JSON, OUT_PNG_COMPARISON, OUT_PNG_REGION,
+                OUT_MD_TOU_BREAKDOWN):
         if src.exists():
             dst = SHARE_DIR / src.name
             shutil.copy2(src, dst)
