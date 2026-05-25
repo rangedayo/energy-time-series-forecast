@@ -7,7 +7,7 @@ run_mpc_simulation() — Streamlit 운영자 화면이 호출할 단일 진입�
   1. data_loader.load_history_and_forecast()로 history 24h + forecast 48h 슬라이스
   2. /predict_horizon 1번 호출 (horizon=48)
   3. 받은 48개 예측을 3개 정책이 공유 (naive/xgb_lookahead/mpc_xgb)
-  4. 정책마다 simulator.run_simulation_with_hourly() 24h 실행
+  4. 정책마다 src.simulation.ess_simulation_v2.run_simulation(include_hourly=True) 24h 실행
   5. 결과 dict 조립
 """
 from __future__ import annotations
@@ -22,13 +22,13 @@ from typing import Any
 import numpy as np
 
 from app_streamlit.data_loader import _load_csv_cached, load_history_and_forecast
-from app_streamlit.simulator import run_simulation_with_hourly
 from src.simulation.ess_config_v2 import build_region_params
 from src.simulation.ess_policy_v2 import (
     policy_lookahead,
     policy_mpc_xgb,
     policy_naive,
 )
+from src.simulation.ess_simulation_v2 import run_simulation
 
 _POLICIES: dict[str, Any] = {
     "naive": policy_naive,
@@ -160,16 +160,20 @@ def _run_policy(
     else:  # naive
         policy_kwargs = None
 
-    return run_simulation_with_hourly(
+    result = run_simulation(
         actual=actual_arr,
         predicted=predicted_arr,
         hours=hours_arr,
-        months=months_arr,
         params=params,
         policy_fn=policy_fn,
-        initial_soc=initial_soc,
         policy_kwargs=policy_kwargs,
+        months=months_arr,
+        initial_soc=initial_soc,
+        include_hourly=True,
     )
+    # 외부 노출 형식 유지: {"hourly": [...], "summary": {...}}
+    hourly = result.pop("hourly")
+    return {"hourly": hourly, "summary": result}
 
 
 def run_mpc_simulation(

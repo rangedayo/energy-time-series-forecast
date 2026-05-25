@@ -14,7 +14,7 @@
     ],
     "mpc_horizon": 24,
     "mpc_solver": "scipy.optimize.linprog(method='highs')",
-    "generated_at": "2026-05-25 18:06:33"
+    "generated_at": "2026-05-26 00:52:18"
   },
   "region_params": {
     "강원도": {
@@ -5228,204 +5228,204 @@
         "mpc_xgb": {
           "lp_total": 5694,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.67
+          "elapsed_sec": 12.16
         },
         "mpc_oracle": {
           "lp_total": 5694,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.62
+          "elapsed_sec": 11.86
         }
       },
       "경기도": {
         "mpc_xgb": {
           "lp_total": 5705,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.34
+          "elapsed_sec": 12.18
         },
         "mpc_oracle": {
           "lp_total": 5705,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.44
+          "elapsed_sec": 12.06
         }
       },
       "경상남도": {
         "mpc_xgb": {
           "lp_total": 5586,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.68
+          "elapsed_sec": 12.15
         },
         "mpc_oracle": {
           "lp_total": 5586,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.34
+          "elapsed_sec": 11.31
         }
       },
       "경상북도": {
         "mpc_xgb": {
           "lp_total": 5715,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.99
+          "elapsed_sec": 11.73
         },
         "mpc_oracle": {
           "lp_total": 5715,
           "lp_infeasible": 0,
-          "elapsed_sec": 11.89
+          "elapsed_sec": 11.62
         }
       },
       "광주시": {
         "mpc_xgb": {
           "lp_total": 5792,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.04
+          "elapsed_sec": 11.85
         },
         "mpc_oracle": {
           "lp_total": 5792,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.29
+          "elapsed_sec": 11.58
         }
       },
       "대구시": {
         "mpc_xgb": {
           "lp_total": 5750,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.04
+          "elapsed_sec": 11.96
         },
         "mpc_oracle": {
           "lp_total": 5750,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.54
+          "elapsed_sec": 11.64
         }
       },
       "대전시": {
         "mpc_xgb": {
           "lp_total": 5785,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.26
+          "elapsed_sec": 11.86
         },
         "mpc_oracle": {
           "lp_total": 5785,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.65
+          "elapsed_sec": 11.6
         }
       },
       "부산시": {
         "mpc_xgb": {
           "lp_total": 5740,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.23
+          "elapsed_sec": 11.85
         },
         "mpc_oracle": {
           "lp_total": 5740,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.88
+          "elapsed_sec": 11.64
         }
       },
       "서울시": {
         "mpc_xgb": {
           "lp_total": 5742,
           "lp_infeasible": 0,
-          "elapsed_sec": 14.35
+          "elapsed_sec": 11.81
         },
         "mpc_oracle": {
           "lp_total": 5742,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.86
+          "elapsed_sec": 13.69
         }
       },
       "세종시": {
         "mpc_xgb": {
           "lp_total": 5538,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.41
+          "elapsed_sec": 12.38
         },
         "mpc_oracle": {
           "lp_total": 5538,
           "lp_infeasible": 0,
-          "elapsed_sec": 11.98
+          "elapsed_sec": 11.61
         }
       },
       "울산시": {
         "mpc_xgb": {
           "lp_total": 5545,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.05
+          "elapsed_sec": 11.97
         },
         "mpc_oracle": {
           "lp_total": 5545,
           "lp_infeasible": 0,
-          "elapsed_sec": 11.6
+          "elapsed_sec": 11.51
         }
       },
       "인천시": {
         "mpc_xgb": {
           "lp_total": 5748,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.87
+          "elapsed_sec": 12.85
         },
         "mpc_oracle": {
           "lp_total": 5748,
           "lp_infeasible": 0,
-          "elapsed_sec": 11.96
+          "elapsed_sec": 12.69
         }
       },
       "전라남도": {
         "mpc_xgb": {
           "lp_total": 5698,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.2
+          "elapsed_sec": 13.63
         },
         "mpc_oracle": {
           "lp_total": 5698,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.42
+          "elapsed_sec": 12.84
         }
       },
       "전라북도": {
         "mpc_xgb": {
           "lp_total": 5732,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.54
+          "elapsed_sec": 12.26
         },
         "mpc_oracle": {
           "lp_total": 5732,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.49
+          "elapsed_sec": 12.15
         }
       },
       "제주도": {
         "mpc_xgb": {
           "lp_total": 5542,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.22
+          "elapsed_sec": 11.53
         },
         "mpc_oracle": {
           "lp_total": 5542,
           "lp_infeasible": 0,
-          "elapsed_sec": 11.97
+          "elapsed_sec": 11.46
         }
       },
       "충청남도": {
         "mpc_xgb": {
           "lp_total": 5704,
           "lp_infeasible": 0,
-          "elapsed_sec": 14.67
+          "elapsed_sec": 12.15
         },
         "mpc_oracle": {
           "lp_total": 5704,
           "lp_infeasible": 0,
-          "elapsed_sec": 13.73
+          "elapsed_sec": 11.55
         }
       },
       "충청북도": {
         "mpc_xgb": {
           "lp_total": 5421,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.69
+          "elapsed_sec": 11.19
         },
         "mpc_oracle": {
           "lp_total": 5421,
           "lp_infeasible": 0,
-          "elapsed_sec": 12.34
+          "elapsed_sec": 11.03
         }
       }
     },
@@ -5433,12 +5433,12 @@
       "mpc_xgb": {
         "lp_total": 5808,
         "lp_infeasible": 749,
-        "elapsed_sec": 14.65
+        "elapsed_sec": 11.59
       },
       "mpc_oracle": {
         "lp_total": 5808,
         "lp_infeasible": 611,
-        "elapsed_sec": 12.96
+        "elapsed_sec": 11.57
       }
     }
   }

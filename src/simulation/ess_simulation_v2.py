@@ -79,11 +79,17 @@ METRIC_KEYS = [
 # ════════════════════════════════════════════════════════════════════════════
 def run_simulation(actual, predicted, hours, params, policy_fn,
                    policy_kwargs=None, months=None,
-                   policy_name=None, verbose=False):
+                   policy_name=None, verbose=False,
+                   initial_soc=SOC_INIT, include_hourly=False):
     """
     한 (지역, 정책) 조합에 대한 단일 시뮬레이션 실행.
 
     정책은 SOC 목표만 결정하고, 충방전 실행은 항상 actual(실측) 기준으로 한다.
+
+    initial_soc: 시뮬 시작 SOC. 디폴트 SOC_INIT(=0.5)는 Phase 1·2 호환성. 운영 도구는
+                 사용자 슬라이더 값 전달.
+    include_hourly: True 면 반환 dict 에 "hourly" 키(시간별 상세 시계열) 포함. 디폴트 False
+                    는 Phase 1·2 산출물 JSON 형식 호환성 유지(키 추가 시 diff 깨짐 방지).
 
     지표 해석:
       self_consumption_rate (자가소비율, %) — 발전한 전기 중 활용한 비율. 높을수록 좋음.
@@ -96,11 +102,17 @@ def run_simulation(actual, predicted, hours, params, policy_fn,
       months 가 주어지면 매 시점 단가를 적용해 비용(import)·수익(export)을 누적.
       None 이면 TOU 계측을 건너뛴다(기존 호환). 의사결정 로직은 절대 바꾸지 않음.
     """
+    if not (0.0 <= initial_soc <= 1.0):
+        raise ValueError(
+            f"initial_soc must be in [0.0, 1.0], got {initial_soc}"
+        )
+
     policy_kwargs = policy_kwargs or {}
     use_tou = months is not None
 
     n = len(actual)
-    soc = SOC_INIT
+    soc = float(initial_soc)
+    hourly = []  # 시간별 상세 시계열 (include_hourly=True 일 때만 반환에 포함)
     total_curtailment = 0.0
     total_shortage_mwh = 0.0
     total_demand_mwh = 0.0
@@ -145,6 +157,12 @@ def run_simulation(actual, predicted, hours, params, policy_fn,
             price_t = 0.0
             period_t = None
 
+        # hourly tracker용 변수 초기화 (분기 진입 전)
+        charge_amount = 0.0
+        discharge_amount = 0.0
+        export_mwh_t = 0.0
+        import_mwh_t = 0.0
+
         if actual_net > 0:
             # 잉여 → 충전
             max_storable = max(0.0, (soc_target_high - soc) * cap / EFFICIENCY)
@@ -152,6 +170,7 @@ def run_simulation(actual, predicted, hours, params, policy_fn,
             soc += charge_amount * EFFICIENCY / cap
             charge_cycles += charge_amount / cap
             export_mwh = actual_net - charge_amount
+            export_mwh_t = export_mwh
             total_curtailment += export_mwh
             if use_tou and export_mwh > 0:
                 total_export_mwh += export_mwh
@@ -170,11 +189,28 @@ def run_simulation(actual, predicted, hours, params, policy_fn,
             if shortfall > 0:
                 shortage_list.append(shortfall)
                 total_shortage_mwh += shortfall
+                import_mwh_t = shortfall
                 if use_tou:
                     total_import_mwh += shortfall
                     total_cost_krw += shortfall * price_t
                     import_mwh_by_period[period_t] += shortfall
                     cost_krw_by_period[period_t] += shortfall * price_t
+
+        if include_hourly:
+            hourly.append({
+                "step": i,
+                "soc": round(soc, 6),
+                "generation_mwh": round(gen, 4),
+                "demand_mwh": round(demand_t, 4),
+                "charge_mwh": round(charge_amount, 4),
+                "discharge_mwh": round(discharge_amount, 4),
+                "grid_buy_mwh": round(import_mwh_t, 4),
+                "grid_sell_mwh": round(export_mwh_t, 4),
+                "price_krw_per_mwh": round(price_t, 2),
+                "period": period_t,
+                "soc_target_high": round(float(soc_target_high), 4),
+                "soc_target_low": round(float(soc_target_low), 4),
+            })
 
     total_gen = float(np.sum(actual))
     curtailment_rate = total_curtailment / max(total_gen, 1e-10) * 100.0
@@ -205,7 +241,7 @@ def run_simulation(actual, predicted, hours, params, policy_fn,
               f"(평균 단가: {avg_export_price:,.0f} 원/MWh)")
         print(f"  순수익:    {net_revenue_krw:>+14,.0f} 원")
 
-    return {
+    result = {
         # 신규 지표 (국제 표준)
         "self_consumption_rate_pct": round(self_consumption_rate, 2),
         "self_sufficiency_rate_pct": round(self_sufficiency_rate, 2),
@@ -243,6 +279,9 @@ def run_simulation(actual, predicted, hours, params, policy_fn,
         # 노이즈 플래그 (울산시 등 weight < 임계 지역)
         "flagged_noise_region": bool(params.get("is_noise_region", False)),
     }
+    if include_hourly:
+        result["hourly"] = hourly
+    return result
 
 
 # ════════════════════════════════════════════════════════════════════════════
