@@ -11,3 +11,4 @@ pip-tools
 fastapi
 uvicorn[standard]
 pydantic
+streamlit>=1.30
