@@ -1,11 +1,14 @@
 """Pydantic v2 request/response models for the prediction API."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from app.config import REGION_LIST_SORTED, VALID_REGIONS
+
+_MIN_VALID_DATE = datetime(1900, 1, 1)
+_MAX_VALID_DATE = datetime(2100, 12, 31, 23, 59, 59)
 
 
 class PredictionRequest(BaseModel):
@@ -121,3 +124,135 @@ class BatchPredictionRequest(BaseModel):
 class BatchPredictionResponse(BaseModel):
     predictions: list[PredictionResponse]
     count: int
+
+
+class HistoryPoint(BaseModel):
+    timestamp: datetime = Field(..., description="과거 시점 (ISO 8601)")
+    power_mwh: float = Field(
+        ...,
+        ge=0,
+        le=50000,
+        description="해당 시점의 실측 발전량 (MWh). 음수 불가, 일괄 상한 50000.",
+    )
+
+
+class ForecastPoint(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    timestamp: datetime = Field(..., description="예측 대상 시점 (ISO 8601)")
+    irradiance: float = Field(..., ge=0, le=5.0, description="일사량 (MJ/m²)")
+    temperature: float = Field(..., alias="기온", description="기온 (°C)")
+    precipitation: float = Field(..., ge=0, alias="강수량", description="강수량 (mm)")
+    humidity: float = Field(..., ge=0, le=100, alias="습도", description="습도 (%)")
+    sunshine: float = Field(..., ge=0, le=1.0, alias="일조", description="일조시간 비율 (0~1)")
+    cloud_cover: float = Field(..., ge=0, le=10, alias="전운량", description="전운량 (0~10)")
+
+
+class HorizonRequest(BaseModel):
+    region: str = Field(..., description="17개 시도 또는 '전국합산'")
+    start_time: datetime = Field(
+        ...,
+        description="예측 시작 시점 (ISO 8601). predictions[0]의 timestamp가 됨.",
+    )
+    horizon: int = Field(
+        ..., ge=1, le=48, description="예측 길이 (시간 단위). 1~48."
+    )
+    history: list[HistoryPoint] = Field(
+        ...,
+        min_length=24,
+        max_length=24,
+        description="start_time 직전 24시간의 실측 발전량. 정확히 24개.",
+    )
+    forecast: list[ForecastPoint] = Field(
+        ...,
+        min_length=1,
+        max_length=48,
+        description="start_time부터 horizon시간의 기상 예보. 정확히 horizon개.",
+    )
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "region": "전라남도",
+                "start_time": "2023-07-15T13:00:00",
+                "horizon": 24,
+                "history": [
+                    {"timestamp": "2023-07-14T13:00:00", "power_mwh": 185.0},
+                    # ... 24개
+                ],
+                "forecast": [
+                    {
+                        "timestamp": "2023-07-15T13:00:00",
+                        "irradiance": 2.95,
+                        "기온": 29.1,
+                        "강수량": 0.0,
+                        "습도": 60.0,
+                        "일조": 0.9,
+                        "전운량": 2.0,
+                    },
+                    # ... horizon개
+                ],
+            }
+        }
+    )
+
+    @field_validator("region")
+    @classmethod
+    def _region_must_be_known(cls, v: str) -> str:
+        if v not in VALID_REGIONS:
+            allowed = ", ".join(REGION_LIST_SORTED)
+            raise ValueError(
+                f"Unknown region {v!r}. Allowed regions: [{allowed}]."
+            )
+        return v
+
+    @field_validator("start_time")
+    @classmethod
+    def _start_time_within_sane_range(cls, v: datetime) -> datetime:
+        if v < _MIN_VALID_DATE or v > _MAX_VALID_DATE:
+            raise ValueError(
+                f"start_time {v.isoformat()} out of sane range "
+                f"[{_MIN_VALID_DATE.isoformat()}, {_MAX_VALID_DATE.isoformat()}]"
+            )
+        return v
+
+    @model_validator(mode="after")
+    def _check_lengths_and_timestamps(self) -> "HorizonRequest":
+        if len(self.forecast) != self.horizon:
+            raise ValueError(
+                f"forecast length must equal horizon. "
+                f"horizon={self.horizon}, forecast 길이={len(self.forecast)}"
+            )
+
+        for i, hp in enumerate(self.history):
+            expected = self.start_time - timedelta(hours=24 - i)
+            if hp.timestamp != expected:
+                raise ValueError(
+                    f"history[{i}] timestamp 연속성 위반: "
+                    f"기대 {expected.isoformat()}, 실제 {hp.timestamp.isoformat()}"
+                )
+
+        for i, fp in enumerate(self.forecast):
+            expected = self.start_time + timedelta(hours=i)
+            if fp.timestamp != expected:
+                raise ValueError(
+                    f"forecast[{i}] timestamp 연속성 위반: "
+                    f"기대 {expected.isoformat()}, 실제 {fp.timestamp.isoformat()}"
+                )
+
+        return self
+
+
+class HorizonPrediction(BaseModel):
+    timestamp: datetime
+    predicted_power_mwh: float
+    step: int = Field(..., description="1-indexed. step=1은 t+1 (start_time과 동일)")
+
+
+class HorizonResponse(BaseModel):
+    region: str
+    start_time: datetime
+    horizon: int
+    predictions: list[HorizonPrediction]
+    model_version: str = "national_xgboost_v1"
+    method: str = "recursive_multistep"

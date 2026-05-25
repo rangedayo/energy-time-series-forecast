@@ -225,6 +225,10 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 - `GET /` · `GET /health` — 메타/헬스
 - `POST /predict` — 단일 (region, timestamp) 발전량 예측
 - `POST /predict_batch` — 최대 1000건 배치 예측 (XGBoost 추론은 스레드풀에서 실행)
+- `POST /predict_horizon` — `start_time`부터 horizon(1~48)시간의 발전량을 재귀
+  multi-step 방식으로 예측 (t+1 예측값을 t+2의 lag로 사용). 입력은 직전 24시간
+  실측 발전량 + 미래 N시간 기상 예보. MPC 등 미래 구간을 한 번에 받아야 하는
+  다운스트림 정책 솔버용. (스레드풀 실행)
 
 Swagger UI는 `http://localhost:8000/docs`, ReDoc은 `http://localhost:8000/redoc`
 에서 확인할 수 있습니다.
@@ -274,12 +278,48 @@ curl -X POST http://localhost:8000/predict \
   -d '{...위와 동일한 JSON...}'
 ```
 
+#### `/predict_horizon` 호출 예시
+
+```python
+import requests
+from datetime import datetime, timedelta
+
+start = datetime(2023, 7, 15, 13, 0, 0)
+history = [
+    {"timestamp": (start - timedelta(hours=24-i)).isoformat(),
+     "power_mwh": 100.0 + i}
+    for i in range(24)
+]
+forecast = [
+    {"timestamp": (start + timedelta(hours=i)).isoformat(),
+     "irradiance": 2.5, "기온": 28.0, "강수량": 0.0,
+     "습도": 60.0, "일조": 0.8, "전운량": 3.0}
+    for i in range(24)
+]
+r = requests.post(
+    "http://localhost:8000/predict_horizon",
+    headers={"X-API-Key": "dev-key-change-me"},
+    json={
+        "region": "전라남도",
+        "start_time": start.isoformat(),
+        "horizon": 24,
+        "history": history,
+        "forecast": forecast,
+    },
+)
+print(r.status_code, len(r.json()["predictions"]))
+# 200 24  — 길이 horizon짜리 [{timestamp, predicted_power_mwh, step}, ...]
+```
+
 ### 회귀 테스트
 
-`pytest app/tests/test_api.py -v` 로 8개 회귀 테스트가 통과해야 합니다.
+`pytest app/tests/test_api.py -v` 로 16개 회귀 테스트가 통과해야 합니다
+(단일/배치 8개 + horizon 8개).
 특히 `test_predict_snapshot`은 학습 CSV에서 5행을 샘플링해 raw `model.predict()`
 결과와 API 경로의 결과가 **|diff| < 1e-4** 안에 들어오는지 검증합니다 —
 "API 경로로 예측해도 학습 모델과 같은 답을 낸다"의 항상 검증되는 보증입니다.
+horizon 테스트는 입력 검증(길이/timestamp 연속성/region/API Key)과 정상 경로의
+예측 형식·길이를 함께 봅니다.
 
 ---
 

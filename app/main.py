@@ -19,11 +19,19 @@ from app.exceptions import (
     validation_error_handler,
     value_error_handler,
 )
-from app.inference import build_feature_vector, predict_batch, predict_single
+from app.inference import (
+    build_feature_vector,
+    predict_batch,
+    predict_horizon,
+    predict_single,
+)
 from app.middleware import RequestLoggingMiddleware
 from app.schemas import (
     BatchPredictionRequest,
     BatchPredictionResponse,
+    HorizonPrediction,
+    HorizonRequest,
+    HorizonResponse,
     PredictionRequest,
     PredictionResponse,
 )
@@ -204,3 +212,45 @@ async def predict_batch_endpoint(
         for item, value in zip(batch.items, values)
     ]
     return BatchPredictionResponse(predictions=predictions, count=len(predictions))
+
+
+@app.post(
+    "/predict_horizon",
+    response_model=HorizonResponse,
+    tags=["prediction"],
+    summary="N시간 발전량 예측 (재귀 multi-step)",
+    description=(
+        "start_time부터 horizon(1~48)시간의 발전량을 예측한다. "
+        "재귀적 multi-step 방식으로 t+1 예측값을 t+2의 lag로 사용. "
+        "MPC 등 미래 시간 구간을 한 번에 받아야 하는 다운스트림 정책 솔버용. "
+        "X-API-Key 헤더 필수."
+    ),
+    dependencies=[Depends(verify_api_key)],
+)
+async def predict_horizon_endpoint(
+    request: HorizonRequest,
+) -> HorizonResponse:
+    loop = asyncio.get_event_loop()
+    values = await loop.run_in_executor(
+        None,
+        predict_horizon,
+        app.state.model,
+        app.state.region_encoder,
+        app.state.feature_order,
+        request,
+    )
+
+    predictions = [
+        HorizonPrediction(
+            timestamp=request.forecast[i].timestamp,
+            predicted_power_mwh=float(v),
+            step=i + 1,
+        )
+        for i, v in enumerate(values)
+    ]
+    return HorizonResponse(
+        region=request.region,
+        start_time=request.start_time,
+        horizon=request.horizon,
+        predictions=predictions,
+    )

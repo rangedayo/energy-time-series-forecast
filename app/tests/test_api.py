@@ -1,6 +1,7 @@
 """Regression tests for the FastAPI prediction service."""
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import numpy as np
@@ -150,3 +151,110 @@ def test_predict_snapshot(client):
         f"API/raw mismatch beyond 1e-4: diffs={diff.tolist()}, "
         f"api={api_preds.tolist()}, raw={raw_preds.tolist()}"
     )
+
+
+def _make_valid_horizon_payload(horizon: int = 24) -> dict:
+    """검증 통과하는 정상 페이로드 생성 헬퍼."""
+    start = datetime(2023, 7, 15, 13, 0, 0)
+    history = [
+        {
+            "timestamp": (start - timedelta(hours=24 - i)).isoformat(),
+            "power_mwh": 100.0 + i,
+        }
+        for i in range(24)
+    ]
+    forecast = [
+        {
+            "timestamp": (start + timedelta(hours=i)).isoformat(),
+            "irradiance": 2.5,
+            "기온": 28.0,
+            "강수량": 0.0,
+            "습도": 60.0,
+            "일조": 0.8,
+            "전운량": 3.0,
+        }
+        for i in range(horizon)
+    ]
+    return {
+        "region": "전라남도",
+        "start_time": start.isoformat(),
+        "horizon": horizon,
+        "history": history,
+        "forecast": forecast,
+    }
+
+
+def test_predict_horizon_valid_24(client):
+    """정상 24시간 요청 → 200, predictions 길이 24, 모두 ≥ 0, step 1~24."""
+    payload = _make_valid_horizon_payload(horizon=24)
+    r = client.post("/predict_horizon", json=payload, headers=AUTH_HEADERS)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert len(body["predictions"]) == 24
+    assert all(p["predicted_power_mwh"] >= 0 for p in body["predictions"])
+    assert [p["step"] for p in body["predictions"]] == list(range(1, 25))
+    assert body["method"] == "recursive_multistep"
+
+
+def test_predict_horizon_valid_48(client):
+    """horizon=48 정상 동작."""
+    payload = _make_valid_horizon_payload(horizon=48)
+    r = client.post("/predict_horizon", json=payload, headers=AUTH_HEADERS)
+    assert r.status_code == 200, r.text
+    assert len(r.json()["predictions"]) == 48
+
+
+def test_predict_horizon_horizon_out_of_range(client):
+    """horizon=0, 49, 100 → 422."""
+    for bad_horizon in [0, 49, 100]:
+        payload = _make_valid_horizon_payload(horizon=24)
+        payload["horizon"] = bad_horizon
+        r = client.post("/predict_horizon", json=payload, headers=AUTH_HEADERS)
+        assert r.status_code == 422
+
+
+def test_predict_horizon_history_length_mismatch(client):
+    """history가 23개 또는 25개 → 422."""
+    for bad_len in [23, 25]:
+        payload = _make_valid_horizon_payload(horizon=24)
+        if bad_len < 24:
+            payload["history"] = payload["history"][:bad_len]
+        else:
+            payload["history"].append(payload["history"][-1])
+        r = client.post("/predict_horizon", json=payload, headers=AUTH_HEADERS)
+        assert r.status_code == 422
+
+
+def test_predict_horizon_forecast_length_mismatch(client):
+    """horizon=24인데 forecast 23개 → 422."""
+    payload = _make_valid_horizon_payload(horizon=24)
+    payload["forecast"] = payload["forecast"][:23]
+    r = client.post("/predict_horizon", json=payload, headers=AUTH_HEADERS)
+    assert r.status_code == 422
+
+
+def test_predict_horizon_history_timestamp_gap(client):
+    """history에 1시간 갭이 있으면 → 422."""
+    payload = _make_valid_horizon_payload(horizon=24)
+    h = payload["history"]
+    h[10]["timestamp"] = (
+        datetime.fromisoformat(h[10]["timestamp"]) + timedelta(hours=2)
+    ).isoformat()
+    r = client.post("/predict_horizon", json=payload, headers=AUTH_HEADERS)
+    assert r.status_code == 422
+
+
+def test_predict_horizon_invalid_region(client):
+    """가짜 region → 422 + 에러 메시지에 유효 region 목록 포함."""
+    payload = _make_valid_horizon_payload()
+    payload["region"] = "화성시"
+    r = client.post("/predict_horizon", json=payload, headers=AUTH_HEADERS)
+    assert r.status_code == 422
+    assert "전라남도" in r.text
+
+
+def test_predict_horizon_requires_api_key(client):
+    """API Key 없으면 → 401."""
+    payload = _make_valid_horizon_payload()
+    r = client.post("/predict_horizon", json=payload)
+    assert r.status_code == 401
