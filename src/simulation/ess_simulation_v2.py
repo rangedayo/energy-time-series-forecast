@@ -9,6 +9,7 @@ LSTM 은 본 분석에서 제외한다. XGBoost 단일 모델 + 합성 정책만
 """
 
 import sys
+import time
 import json
 import shutil
 import warnings
@@ -40,7 +41,8 @@ from src.simulation.ess_config_v2 import (
 PERIODS = ("off_peak", "mid_peak", "max_peak")
 from src.simulation.ess_policy_v2 import (
     policy_naive, policy_lookahead, policy_perfect_foresight,
-    policy_xgb_no_lookahead,
+    policy_xgb_no_lookahead, policy_mpc_xgb, policy_mpc_oracle,
+    reset_lp_stats, get_lp_stats,
 )
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -246,14 +248,22 @@ def run_simulation(actual, predicted, hours, params, policy_fn,
 # ════════════════════════════════════════════════════════════════════════════
 # TASK G-4 — 메인 비교 실행
 # ════════════════════════════════════════════════════════════════════════════
+MPC_HORIZON = 24
+
 SCENARIOS = {
     # scenario_name : (policy_fn, pred_source)
     "naive_baseline":   (policy_naive,             "actual"),
     "xgb_no_lookahead": (policy_xgb_no_lookahead,  "predicted"),
     "xgb_lookahead":    (policy_lookahead,         "predicted"),
     "oracle":           (policy_perfect_foresight, "actual"),
+    "mpc_xgb":          (policy_mpc_xgb,           "predicted"),
+    "mpc_oracle":       (policy_mpc_oracle,        "actual"),
 }
-SCENARIO_ORDER = ["naive_baseline", "xgb_no_lookahead", "xgb_lookahead", "oracle"]
+SCENARIO_ORDER = [
+    "naive_baseline", "xgb_no_lookahead", "xgb_lookahead", "oracle",
+    "mpc_xgb", "mpc_oracle",
+]
+MPC_SCENARIOS = {"mpc_xgb", "mpc_oracle"}
 
 
 def aggregate_metrics(region_results, scenario, regions, region_params, mode):
@@ -285,8 +295,9 @@ def make_comparison_png(aggregates, path):
         ("mean_shortage_mwh", "평균 부족 심각도 (MWh)"),
         ("battery_cycles", "배터리 사이클수"),
     ]
-    fig, axes = plt.subplots(2, 2, figsize=(13, 9))
-    colors = ["#9aa5b1", "#f0a868", "#4e79a7", "#59a14f"]
+    fig, axes = plt.subplots(2, 2, figsize=(15, 9))
+    colors = ["#9aa5b1", "#f0a868", "#4e79a7", "#59a14f",
+              "#b07aa1", "#e15759"]
     for ax, (key, label) in zip(axes.flat, metrics):
         vals = [wavg[s][key] for s in SCENARIO_ORDER]
         bars = ax.bar(SCENARIO_ORDER, vals, color=colors)
@@ -305,10 +316,10 @@ def make_region_breakdown_png(region_results, regions, path):
     """17지역 × 4시나리오 자급률 히트맵."""
     mat = np.array([[region_results[r][s]["self_sufficiency_rate_pct"]
                      for s in SCENARIO_ORDER] for r in regions])
-    fig, ax = plt.subplots(figsize=(9, 11))
+    fig, ax = plt.subplots(figsize=(11, 11))
     im = ax.imshow(mat, aspect="auto", cmap="YlGnBu")
     ax.set_xticks(range(len(SCENARIO_ORDER)))
-    ax.set_xticklabels(SCENARIO_ORDER, rotation=20)
+    ax.set_xticklabels(SCENARIO_ORDER, rotation=25)
     ax.set_yticks(range(len(regions)))
     ax.set_yticklabels(regions)
     for i in range(len(regions)):
@@ -469,21 +480,114 @@ def _verify_tou_breakdown(national_sum):
     return ok
 
 
-def _print_tou_table(national_sum):
-    """섹션 10 보고 표 — 전국 합산 시뮬 기준 TOU 수익 비교."""
-    print("=" * 88)
+def _print_tou_table(national_sum, lp_stats_national=None):
+    """섹션 10 보고 표 — 전국 합산 시뮬 기준 TOU 수익 비교 (MPC LP 수 포함)."""
+    lp_stats_national = lp_stats_national or {}
+    print("=" * 104)
     print("[ESS v2 TOU 결과 — 전국 합산 시뮬 기준]")
-    print("=" * 88)
+    print("=" * 104)
     print(f"{'정책':<20}{'자급률(%)':>12}{'net_revenue(원)':>22}"
-          f"{'total_cost(원)':>18}{'total_revenue(원)':>20}")
-    print("─" * 88)
+          f"{'total_cost(원)':>18}{'total_revenue(원)':>20}{'LP 풀이':>12}")
+    print("─" * 104)
     for s in SCENARIO_ORDER:
         m = national_sum[s]
+        lp_n = lp_stats_national.get(s, {}).get("lp_total", 0)
         print(f"{s:<20}{m['self_sufficiency_rate_pct']:>11.2f} "
               f"{m['net_revenue_krw']:>+21,.0f} "
               f"{m['total_cost_krw']:>17,.0f} "
-              f"{m['total_revenue_krw']:>19,.0f}")
-    print("=" * 88)
+              f"{m['total_revenue_krw']:>19,.0f} "
+              f"{lp_n:>11,}")
+    print("=" * 104)
+
+
+def _print_mpc_report(national_sum, lp_stats_regions, lp_stats_national):
+    """섹션 9 핵심 산출물 — MPC vs 기존 정책 비교 + 가설 검증 한 줄."""
+    print()
+    print("=" * 104)
+    print("[MPC 핵심 보고 — 전국 합산 시뮬 기준]")
+    print("=" * 104)
+    print(f"{'정책':<20}{'자급률(%)':>12}{'net_revenue(원)':>22}"
+          f"{'total_cost(원)':>18}{'total_revenue(원)':>20}{'LP 풀이':>12}")
+    print("─" * 104)
+    # 지역 합계 LP 수 (참고: 본 표는 national_sum, LP 수는 17지역 합)
+    lp_total_by_scen = {s: 0 for s in SCENARIO_ORDER}
+    for region, scen_map in lp_stats_regions.items():
+        for s, stat in scen_map.items():
+            lp_total_by_scen[s] += stat["lp_total"]
+    for s in SCENARIO_ORDER:
+        m = national_sum[s]
+        if s in MPC_SCENARIOS:
+            lp_n_disp = lp_total_by_scen[s]  # 17지역 합 (=17 × 8760)
+        else:
+            lp_n_disp = 0
+        print(f"{s:<20}{m['self_sufficiency_rate_pct']:>11.2f} "
+              f"{m['net_revenue_krw']:>+21,.0f} "
+              f"{m['total_cost_krw']:>17,.0f} "
+              f"{m['total_revenue_krw']:>19,.0f} "
+              f"{lp_n_disp:>11,}")
+    print("=" * 104)
+    # 가설 검증 한 줄
+    base_net = national_sum["xgb_lookahead"]["net_revenue_krw"]
+    base_ss = national_sum["xgb_lookahead"]["self_sufficiency_rate_pct"]
+    mpc_x_net = national_sum["mpc_xgb"]["net_revenue_krw"]
+    mpc_x_ss = national_sum["mpc_xgb"]["self_sufficiency_rate_pct"]
+    mpc_o_net = national_sum["mpc_oracle"]["net_revenue_krw"]
+    delta_net_pct = (mpc_x_net - base_net) / abs(base_net) * 100 if base_net else 0.0
+    oracle_uplift_pct = ((mpc_o_net - mpc_x_net) / abs(mpc_x_net) * 100
+                         if mpc_x_net else 0.0)
+    print(f"> mpc_xgb는 xgb_lookahead 대비 net_revenue {delta_net_pct:+.2f}% 변화, "
+          f"자급률 {mpc_x_ss - base_ss:+.2f} pt 변화.")
+    print(f"> mpc_oracle은 mpc_xgb 대비 net_revenue {oracle_uplift_pct:+.2f}% 추가 "
+          f"변화 (=예측 정확도가 MPC 가치로 전환되는 폭).")
+
+
+def _verify_mpc(national_sum):
+    """MPC 검증 — oracle≥xgb_mpc, mpc_xgb 대 xgb_lookahead 우열, 기존 정책 invariance."""
+    ok = True
+    a = national_sum["mpc_oracle"]["net_revenue_krw"]
+    b = national_sum["mpc_xgb"]["net_revenue_krw"]
+    if a + 1e-6 < b:
+        print(f"  ✗ mpc_oracle({a:+,.0f}) < mpc_xgb({b:+,.0f}) — oracle 우위 깨짐")
+        ok = False
+    else:
+        print(f"  ✓ mpc_oracle ≥ mpc_xgb 만족 (net_revenue {a:+,.0f} ≥ {b:+,.0f})")
+
+    lk = national_sum["xgb_lookahead"]["net_revenue_krw"]
+    if b > lk:
+        print(f"  ✓ mpc_xgb({b:+,.0f}) > xgb_lookahead({lk:+,.0f}) — MPC 가치 발견")
+    else:
+        print(f"  ⚠ mpc_xgb({b:+,.0f}) ≤ xgb_lookahead({lk:+,.0f}) — "
+              f"MPC 가치 없음 (Phase 2 결론에 반영)")
+    return ok
+
+
+def _verify_invariance(national_sum, snapshot_path):
+    """이전 4개 정책 결과와 완전 동일한지 검증."""
+    if not snapshot_path.exists():
+        print(f"  (snapshot 없음 — invariance 검증 생략: {snapshot_path})")
+        return True
+    with open(snapshot_path, encoding="utf-8") as f:
+        old = json.load(f)
+    old_national = old["aggregates"]["national_sum"]
+    keys = ("self_sufficiency_rate_pct", "self_consumption_rate_pct",
+            "total_shortage_mwh", "total_curtailment_mwh",
+            "total_import_mwh", "total_export_mwh",
+            "total_cost_krw", "total_revenue_krw", "net_revenue_krw")
+    invariance_scenarios = [s for s in SCENARIO_ORDER if s not in MPC_SCENARIOS
+                            and s in old_national]
+    ok = True
+    for s in invariance_scenarios:
+        for k in keys:
+            v_old = old_national[s][k]
+            v_new = national_sum[s][k]
+            tol = max(1.0, abs(v_old) * 1e-6)
+            if abs(v_old - v_new) > tol:
+                print(f"  ✗ invariance 깨짐: {s}.{k} {v_old} → {v_new}")
+                ok = False
+    if ok:
+        print(f"  ✓ 기존 4개 정책({', '.join(invariance_scenarios)}) "
+              f"national_sum 지표 전부 invariant")
+    return ok
 
 
 def _print_weighted_table(wavg):
@@ -536,9 +640,15 @@ def main():
           f"→ clean {len(regions_clean)}개")
 
     # ── 지역별 × 시나리오별 실행 ─────────────────────────────────────────────
+    # MPC 정책은 LP 풀이 비용이 크므로 (지역, 정책) 단위로 진행률·ETA 출력.
     region_results = {}
+    lp_stats_by_region = {}  # region -> {scen: {"total":…,"infeasible":…,"elapsed":…}}
     n_sims = 0
-    for region in regions_all:
+    n_regions = len(regions_all)
+    mpc_t0 = time.time()
+    mpc_done = 0
+    mpc_total_jobs = n_regions * len(MPC_SCENARIOS)
+    for r_idx, region in enumerate(regions_all, start=1):
         r_df = xgb_df[xgb_df["region"] == region].sort_values("timestamp")
         hours = r_df["timestamp"].dt.hour.values
         months = r_df["timestamp"].dt.month.values
@@ -547,13 +657,39 @@ def main():
         params = region_params[region]
 
         region_results[region] = {}
+        lp_stats_by_region[region] = {}
         for scen_name, (policy_fn, pred_source) in SCENARIOS.items():
             pred_input = actual_arr if pred_source == "actual" else pred_arr
+            is_mpc = scen_name in MPC_SCENARIOS
+            pk = None
+            if is_mpc:
+                pk = {"months_arr": months, "hours_arr": hours,
+                      "horizon": MPC_HORIZON}
+                reset_lp_stats()
+                t_start = time.time()
+                print(f"[{ts()}] {scen_name} / {region} ({r_idx}/{n_regions}) "
+                      f"— {len(actual_arr)} 시점 LP 풀이 중...")
+
             region_results[region][scen_name] = run_simulation(
                 actual_arr, pred_input, hours, params, policy_fn,
-                months=months,
+                policy_kwargs=pk, months=months,
             )
             n_sims += 1
+
+            if is_mpc:
+                elapsed = time.time() - t_start
+                stats = get_lp_stats()
+                lp_stats_by_region[region][scen_name] = {
+                    "lp_total": stats["total"],
+                    "lp_infeasible": stats["infeasible"],
+                    "elapsed_sec": round(elapsed, 2),
+                }
+                mpc_done += 1
+                avg = (time.time() - mpc_t0) / max(mpc_done, 1)
+                eta = avg * (mpc_total_jobs - mpc_done)
+                print(f"[{ts()}]   ✓ elapsed={elapsed:.1f}s  "
+                      f"LP={stats['total']:,} infeasible={stats['infeasible']}  "
+                      f"ETA(MPC 전체)≈{eta:.0f}s")
     print(f"[{ts()}] 지역별 시뮬 완료 — {n_sims}개 "
           f"({len(regions_all)}지역 × {len(SCENARIOS)}시나리오)")
 
@@ -587,13 +723,33 @@ def main():
         "is_noise_region": False,
     }
     national_sum = {}
+    national_sum_lp_stats = {}
     print(f"\n[{ts()}] 전국 합산 시뮬 — TOU sanity check (정책별 1회씩 출력)")
     for scen_name, (policy_fn, pred_source) in SCENARIOS.items():
         pred_input = nat_actual if pred_source == "actual" else nat_pred
+        is_mpc = scen_name in MPC_SCENARIOS
+        pk = None
+        if is_mpc:
+            pk = {"months_arr": nat_months, "hours_arr": nat_hours,
+                  "horizon": MPC_HORIZON}
+            reset_lp_stats()
+            t_start = time.time()
+            print(f"[{ts()}] (national) {scen_name} LP 풀이 중...")
         national_sum[scen_name] = run_simulation(
             nat_actual, pred_input, nat_hours, total_params, policy_fn,
-            months=nat_months, policy_name=scen_name, verbose=True,
+            policy_kwargs=pk, months=nat_months,
+            policy_name=scen_name, verbose=True,
         )
+        if is_mpc:
+            elapsed = time.time() - t_start
+            stats = get_lp_stats()
+            national_sum_lp_stats[scen_name] = {
+                "lp_total": stats["total"],
+                "lp_infeasible": stats["infeasible"],
+                "elapsed_sec": round(elapsed, 2),
+            }
+            print(f"[{ts()}]   ✓ (national) elapsed={elapsed:.1f}s  "
+                  f"LP={stats['total']:,} infeasible={stats['infeasible']}")
     print(f"[{ts()}] 3가지 집계 완료 (단순17/단순16/가중/합산)")
 
     aggregates = {
@@ -624,11 +780,17 @@ def main():
             "load_pattern": "정성적 한국 부하 곡선 (정규화)",
             "model": "XGBoost (national v2, power_diff 포함)",
             "noise_regions": noise_regions,
+            "mpc_horizon": MPC_HORIZON,
+            "mpc_solver": "scipy.optimize.linprog(method='highs')",
             "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         },
         "region_params": region_params,
         "regions": region_results,
         "aggregates": aggregates,
+        "mpc_lp_stats": {
+            "regions": lp_stats_by_region,
+            "national_sum": national_sum_lp_stats,
+        },
     }
     OUT_JSON.parent.mkdir(exist_ok=True)
     with open(OUT_JSON, "w", encoding="utf-8") as f:
@@ -645,7 +807,15 @@ def main():
     print()
     _print_weighted_table(weighted)
     print()
-    _print_tou_table(national_sum)
+    _print_tou_table(national_sum, national_sum_lp_stats)
+
+    # ── 섹션 9 핵심 보고: MPC vs 기존 정책 ─────────────────────────────────
+    _print_mpc_report(national_sum, lp_stats_by_region, national_sum_lp_stats)
+    print(f"\n[{ts()}] MPC 검증")
+    _verify_mpc(national_sum)
+    print(f"[{ts()}] 기존 4개 정책 invariance 검증 (prempc snapshot 대비)")
+    _verify_invariance(national_sum,
+                       OUT_JSON.with_name("ess_v2_simulation_results.prempc.json"))
 
     # ── TOU 부하구분별 분해 표 출력 + 검증 ──────────────────────────────────
     _write_tou_breakdown_md(national_sum, OUT_MD_TOU_BREAKDOWN)
