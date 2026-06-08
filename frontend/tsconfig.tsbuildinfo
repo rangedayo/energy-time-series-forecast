@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/plotly-dist.d.ts","./src/components/charts.tsx","./src/components/panels.tsx","./src/components/sidebar.tsx","./vite.config.ts"],"version":"5.9.3"}
