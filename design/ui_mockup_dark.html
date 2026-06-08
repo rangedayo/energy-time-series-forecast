@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ESS 운영 도구 — 다크 시안</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root {
+    --bg:        #0E1117;
+    --bg-soft:   #161B26;
+    --bg-card:   #1B2230;
+    --border:    #2A3344;
+    --text:      #E6E9EF;
+    --text-dim:  #9AA4B2;
+    --solar:     #FFB800;   /* 태양광 옐로 */
+    --energy:    #00D9C0;   /* 에너지 시안 */
+    --blue:      #4C8DFF;   /* 예측 */
+    --red:       #FF6B6B;   /* 실측 */
+    --green:     #34D399;   /* 판매/best */
+    --shadow:    0 4px 24px rgba(0,0,0,.45);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 80% -10%, #1a2433 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: "Pretendard", "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* ── Header ───────────────────────────────────────── */
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 22px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(90deg, rgba(255,184,0,.08), rgba(0,217,192,.05) 60%, transparent);
+  }
+  .logo {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 22px;
+    background: linear-gradient(135deg, var(--solar), var(--energy));
+    box-shadow: 0 0 20px rgba(0,217,192,.35);
+  }
+  header h1 { margin: 0; font-size: 20px; letter-spacing: -.3px; }
+  header .sub { margin: 2px 0 0; font-size: 13px; color: var(--text-dim); }
+  .pill {
+    margin-left: auto; font-size: 12px; padding: 6px 12px; border-radius: 999px;
+    background: rgba(52,211,153,.12); color: var(--green);
+    border: 1px solid rgba(52,211,153,.3);
+  }
+  .pill .dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+    background: var(--green); margin-right:7px; box-shadow:0 0 8px var(--green); }
+
+  /* ── Layout ───────────────────────────────────────── */
+  .shell { display: grid; grid-template-columns: 280px 1fr; gap: 0; }
+  aside {
+    padding: 24px 22px; border-right: 1px solid var(--border);
+    min-height: calc(100vh - 89px); background: var(--bg-soft);
+  }
+  aside h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-dim); margin: 0 0 18px; }
+  .field { margin-bottom: 18px; }
+  .field label { display:block; font-size:12px; color: var(--text-dim); margin-bottom:7px; }
+  .control {
+    width:100%; padding:11px 13px; border-radius:10px; font-size:14px;
+    background: var(--bg-card); border:1px solid var(--border); color: var(--text);
+  }
+  .control:focus { outline:none; border-color: var(--energy); box-shadow:0 0 0 3px rgba(0,217,192,.15); }
+  .slider-row { display:flex; align-items:center; gap:10px; }
+  input[type=range]{ -webkit-appearance:none; width:100%; height:6px; border-radius:3px;
+    background: var(--border); /* fill 은 JS 가 --p 로 갱신 */
+    background-image: linear-gradient(90deg, var(--solar), var(--energy));
+    background-size: var(--p, 50%) 100%; background-repeat: no-repeat; }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:18px; height:18px;
+    border-radius:50%; background:var(--energy); box-shadow:0 0 10px rgba(0,217,192,.6); cursor:pointer; }
+  .soc-val { font-variant-numeric: tabular-nums; font-size:13px; color: var(--energy); min-width:34px; }
+  .run-btn {
+    width:100%; margin-top:6px; padding:13px; border:none; border-radius:11px;
+    font-size:14px; font-weight:700; color:#0E1117; cursor:pointer;
+    position:relative; overflow:hidden;
+    background: linear-gradient(135deg, var(--solar), var(--energy));
+    box-shadow: 0 6px 20px rgba(0,217,192,.3);
+    transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+  }
+  .run-btn:hover { filter:brightness(1.08); box-shadow:0 8px 28px rgba(0,217,192,.45); }
+  .run-btn:active { transform: scale(.96); box-shadow:0 3px 12px rgba(0,217,192,.3); }
+  /* 클릭 리플 */
+  .ripple { position:absolute; border-radius:50%; transform:scale(0); pointer-events:none;
+    background: rgba(255,255,255,.45); animation: ripple .55s ease-out; }
+  @keyframes ripple { to { transform:scale(3.2); opacity:0; } }
+  .hint { font-size:11px; color:var(--text-dim); margin-top:14px; line-height:1.5; }
+
+  main { padding: 26px 32px 60px; }
+
+  /* ── KPI cards ────────────────────────────────────── */
+  .kpis { display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin-bottom:26px; }
+  .kpi {
+    background: var(--bg-card); border:1px solid var(--border); border-radius:16px;
+    padding:18px 20px; position:relative; overflow:hidden; box-shadow: var(--shadow);
+    transition: transform .22s cubic-bezier(.2,.7,.3,1), border-color .22s ease, box-shadow .22s ease;
+    opacity:0; transform: translateY(12px); cursor:default;
+  }
+  .kpi.in { opacity:1; transform: translateY(0); }
+  .kpi:hover {
+    transform: translateY(-5px);
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    box-shadow: 0 12px 32px rgba(0,0,0,.5), 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  .kpi::after { /* hover 글로우 */
+    content:""; position:absolute; inset:0; opacity:0; transition:opacity .22s ease;
+    background: radial-gradient(140px 80px at 85% -10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  }
+  .kpi:hover::after { opacity:1; }
+  .kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background: var(--accent, var(--energy)); }
+  .kpi > * { position:relative; z-index:1; }
+  .kpi .k-label { font-size:12px; color:var(--text-dim); }
+  .kpi .k-val { font-size:26px; font-weight:700; margin-top:8px; letter-spacing:-.5px;
+    font-variant-numeric: tabular-nums; }
+  .kpi .k-delta { font-size:12px; margin-top:6px; }
+  .up { color: var(--green); } .down { color: var(--red); }
+
+  /* ── Section ──────────────────────────────────────── */
+  .section-title { font-size:15px; font-weight:600; margin: 4px 0 14px; display:flex; align-items:center; gap:8px; }
+  .section-title::before { content:""; width:3px; height:15px; border-radius:2px; background: var(--solar); }
+
+  /* ── Metrics table ────────────────────────────────── */
+  .panel { background: var(--bg-card); border:1px solid var(--border); border-radius:16px;
+    padding:18px 22px; box-shadow: var(--shadow); margin-bottom:26px; }
+  /* separate 모델 + 행 간격으로 best 칩이 서로 떨어져 보이게 */
+  table { width:100%; border-collapse: separate; border-spacing: 8px 7px; font-size:13.5px; }
+  th, td { text-align:right; padding:10px 14px; font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align:left; color:var(--text-dim); padding-left:4px; }
+  thead th { color:var(--text); font-weight:600; padding-bottom:2px; }
+  tbody td:not(:first-child) { /* 일반 값 칸도 옅은 칩으로 → 격자감 */
+    background: var(--bg-soft); border:1px solid transparent; border-radius:9px;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+  tbody td:not(:first-child):hover { border-color: var(--border); transform: translateY(-1px); }
+  td.best { /* 독립 둥근 칩 — 주변과 확실히 분리 */
+    background: rgba(52,211,153,.14); color: var(--green); font-weight:700;
+    border:1px solid rgba(52,211,153,.45) !important; border-radius:10px; position:relative;
+    box-shadow: 0 0 0 1px rgba(52,211,153,.08), 0 4px 14px rgba(52,211,153,.14); }
+  td.best::after { content:"★"; font-size:10px; margin-left:6px; opacity:.85; }
+
+  /* ── Chart grid ───────────────────────────────────── */
+  .charts { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+  .chart-card { background: var(--bg-card); border:1px solid var(--border); border-radius:16px;
+    padding:8px 8px 4px; box-shadow: var(--shadow);
+    transition: transform .22s cubic-bezier(.2,.7,.3,1), border-color .22s ease, box-shadow .22s ease; }
+  .chart-card:hover { transform: translateY(-3px); border-color:#36425a;
+    box-shadow: 0 14px 34px rgba(0,0,0,.5); }
+  .chart-card .ch-head { display:flex; align-items:center; justify-content:space-between;
+    padding:10px 12px 2px; }
+  .chart-card .ch-head span { font-size:13px; color:var(--text-dim); }
+  .seg { display:flex; gap:4px; background:var(--bg-soft); padding:3px; border-radius:9px;
+    border:1px solid var(--border); }
+  .seg button { font-size:11px; padding:5px 11px; border-radius:7px; cursor:pointer;
+    background: transparent; border:1px solid transparent; color:var(--text-dim);
+    transition: color .18s ease, background .25s ease, transform .12s ease; }
+  .seg button:hover { color:var(--text); }
+  .seg button:active { transform: scale(.92); }
+  .seg button.active { background: rgba(0,217,192,.15); color:var(--energy);
+    border-color: rgba(0,217,192,.4); box-shadow:0 0 12px rgba(0,217,192,.18); }
+  .note { font-size:11px; color:var(--text-dim); margin-top:18px; text-align:center; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo">☀</div>
+    <div>
+      <h1>ESS 운영 도구</h1>
+      <p class="sub">태양광 발전 예측 기반 ESS 운영 정책 비교 · naive / xgb_lookahead / mpc_xgb</p>
+    </div>
+    <div class="pill"><span class="dot"></span>API 연결됨</div>
+  </header>
+
+  <div class="shell">
+    <aside>
+      <h2>입력</h2>
+      <div class="field">
+        <label>지역 (region)</label>
+        <select class="control"><option>전라남도</option><option>전라북도</option><option>경상남도</option></select>
+      </div>
+      <div class="field">
+        <label>시뮬 시작 날짜</label>
+        <input class="control" type="text" value="2022-06-15" />
+      </div>
+      <div class="field">
+        <label>시뮬 시작 시각</label>
+        <input class="control" type="text" value="09:00" />
+      </div>
+      <div class="field">
+        <label>초기 SOC</label>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="50" id="soc" style="--p:50%"
+                 oninput="this.style.setProperty('--p', this.value+'%'); document.getElementById('socv').textContent=(this.value/100).toFixed(2)" />
+          <span class="soc-val" id="socv">0.50</span>
+        </div>
+      </div>
+      <button class="run-btn">⚡ 실행</button>
+      <p class="hint">사용 가능 범위<br/>2017-01-02 ~ 2023-12-29<br/><br/>3개 정책 시뮬레이션 (~5초)</p>
+    </aside>
+
+    <main>
+      <div class="kpis">
+        <div class="kpi" style="--accent:var(--solar)">
+          <div class="k-label">최적 순수익 (mpc_xgb)</div>
+          <div class="k-val">12.4<span style="font-size:14px;color:var(--text-dim)"> 백만원</span></div>
+          <div class="k-delta up">▲ naive 대비 +18.6%</div>
+        </div>
+        <div class="kpi" style="--accent:var(--energy)">
+          <div class="k-label">자급률</div>
+          <div class="k-val">87.2<span style="font-size:14px;color:var(--text-dim)"> %</span></div>
+          <div class="k-delta up">▲ +9.1%p</div>
+        </div>
+        <div class="kpi" style="--accent:var(--blue)">
+          <div class="k-label">배터리 사이클</div>
+          <div class="k-val">0.84</div>
+          <div class="k-delta down">▼ 수명 영향 낮음</div>
+        </div>
+        <div class="kpi" style="--accent:var(--red)">
+          <div class="k-label">총 매입 전력</div>
+          <div class="k-val">3.21<span style="font-size:14px;color:var(--text-dim)"> MWh</span></div>
+          <div class="k-delta up">▼ 최소 (best)</div>
+        </div>
+      </div>
+
+      <div class="section-title">핵심 지표</div>
+      <div class="panel">
+        <table>
+          <thead><tr><th>지표</th><th>Naive</th><th>XGB Lookahead</th><th>MPC-XGB</th></tr></thead>
+          <tbody>
+            <tr><td>순수익 (원)</td><td>10,460,000</td><td>11,720,000</td><td class="best">12,410,000</td></tr>
+            <tr><td>자급률 (%)</td><td>78.10</td><td>83.40</td><td class="best">87.20</td></tr>
+            <tr><td>총 매입 (MWh)</td><td>5.42</td><td>4.05</td><td class="best">3.21</td></tr>
+            <tr><td>총 판매 (MWh)</td><td>9.88</td><td>10.12</td><td>10.04</td></tr>
+            <tr><td>배터리 사이클</td><td>0.61</td><td>0.79</td><td>0.84</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">차트</div>
+      <div class="charts">
+        <div class="chart-card">
+          <div class="ch-head"><span>발전량 예측 vs 실측 (48h)</span></div>
+          <div id="ch1" style="height:280px"></div>
+        </div>
+        <div class="chart-card">
+          <div class="ch-head"><span>정책별 SOC 추이 (24h)</span></div>
+          <div id="ch2" style="height:280px"></div>
+        </div>
+        <div class="chart-card">
+          <div class="ch-head"><span>정책별 순수익 vs 자급률</span></div>
+          <div id="ch3" style="height:280px"></div>
+        </div>
+        <div class="chart-card">
+          <div class="ch-head">
+            <span>시간대별 매매</span>
+            <div class="seg"><button>Naive</button><button>XGB</button><button class="active">MPC-XGB</button></div>
+          </div>
+          <div id="ch4" style="height:280px"></div>
+        </div>
+      </div>
+
+      <p class="note">※ 시안용 더미 데이터입니다. 실제 값은 시뮬레이션 결과로 채워집니다.</p>
+    </main>
+  </div>
+
+<script>
+  // ── 다크 테마 공통 레이아웃 ──
+  const FONT = { family: 'Segoe UI, Malgun Gothic, sans-serif', color: '#9AA4B2', size: 11 };
+  const baseLayout = (extra={}) => Object.assign({
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    plot_bgcolor: 'rgba(0,0,0,0)',
+    font: FONT,
+    margin: { l: 46, r: 18, t: 10, b: 36 },
+    xaxis: { gridcolor: '#2A3344', zerolinecolor: '#2A3344' },
+    yaxis: { gridcolor: '#2A3344', zerolinecolor: '#2A3344' },
+    legend: { orientation: 'h', y: 1.12, font: { size: 10 } },
+    hoverlabel: { bgcolor: '#1B2230', bordercolor: '#2A3344', font: { color:'#E6E9EF' } },
+  }, extra);
+  const CFG = { displayModeBar: false, responsive: true };
+
+  // 합성 데이터
+  const H = Array.from({length:48}, (_,i)=>i);
+  const solar = H.map(h => { const x=(h%24); const v=Math.max(0, Math.sin((x-6)/12*Math.PI))*8.6; return +(v*(0.9+Math.random()*0.2)).toFixed(2); });
+  const actual = solar.map(v => +(v*(0.85+Math.random()*0.25)).toFixed(2));
+
+  Plotly.newPlot('ch1', [
+    { x:H.slice(0,24), y:solar.slice(0,24), name:'예측(시뮬)', mode:'lines', line:{color:'#4C8DFF', width:2.5} },
+    { x:H.slice(23), y:solar.slice(23), name:'예측(이후)', mode:'lines', line:{color:'#4C8DFF', width:1.6, dash:'dash'}, opacity:.6 },
+    { x:H, y:actual, name:'실측', mode:'lines', line:{color:'#FF6B6B', width:1.6, dash:'dot'} },
+  ], baseLayout({ shapes:[{type:'rect', x0:0, x1:23, y0:0, y1:1, yref:'paper', fillcolor:'#4C8DFF', opacity:.06, line:{width:0}}] }), CFG);
+
+  const S = Array.from({length:24},(_,i)=>i);
+  const socCurve = (base,amp,ph)=> S.map(h=> +(base+amp*Math.sin((h-ph)/24*2*Math.PI)).toFixed(3));
+  Plotly.newPlot('ch2', [
+    { x:S, y:socCurve(.45,.18,4), name:'Naive', mode:'lines', line:{color:'#9AA4B2', width:2.2} },
+    { x:S, y:socCurve(.5,.26,3), name:'XGB Lookahead', mode:'lines', line:{color:'#FFB800', width:2.2} },
+    { x:S, y:socCurve(.55,.32,2), name:'MPC-XGB', mode:'lines', line:{color:'#00D9C0', width:2.6} },
+  ], baseLayout({ yaxis:{ gridcolor:'#2A3344', range:[0,1] },
+     shapes:[
+       {type:'line', x0:0,x1:23,y0:.1,y1:.1, line:{color:'#566', dash:'dash', width:1}},
+       {type:'line', x0:0,x1:23,y0:.9,y1:.9, line:{color:'#566', dash:'dash', width:1}},
+     ]}), CFG);
+
+  Plotly.newPlot('ch3', [
+    { x:['Naive','XGB','MPC-XGB'], y:[10.46,11.72,12.41], name:'순수익(백만원)', type:'bar',
+      marker:{color:['#9AA4B2','#FFB800','#00D9C0']} },
+    { x:['Naive','XGB','MPC-XGB'], y:[78.1,83.4,87.2], name:'자급률(%)', type:'scatter', yaxis:'y2',
+      mode:'lines+markers', line:{color:'#4C8DFF', width:2}, marker:{size:8} },
+  ], baseLayout({ yaxis:{ gridcolor:'#2A3344', title:{text:'백만원',font:FONT} },
+     yaxis2:{ overlaying:'y', side:'right', showgrid:false, title:{text:'%',font:FONT} } }), CFG);
+
+  // 정책별 매매 데이터 (탭 전환 데모)
+  const rnd = (seed=>()=> (seed=(seed*9301+49297)%233280)/233280);
+  function tradingFor(policy){
+    const r = rnd(policy==='naive'?7:policy==='xgb'?42:101);
+    const amp = policy==='naive'?2.5: policy==='xgb'?3.6:4.6;
+    const sell = S.map(h=> (h>=8&&h<=18)? +(r()*amp+0.6).toFixed(2):0);
+    const buy  = S.map(h=> (h<7||h>19)? -+(r()*2).toFixed(2):0);
+    const soc  = socCurve(policy==='mpc'?.55:.48, policy==='mpc'?.32:.2, 2);
+    return {sell, buy, soc};
+  }
+  function drawTrading(policy){
+    const d = tradingFor(policy);
+    Plotly.animate('ch4', {
+      data: [{ y:d.sell }, { y:d.buy }, { y:d.soc }],
+    }, { transition:{ duration:550, easing:'cubic-in-out' }, frame:{ duration:550 } });
+  }
+  const t0 = tradingFor('mpc');
+  Plotly.newPlot('ch4', [
+    { x:S, y:t0.sell, name:'판매', type:'bar', marker:{color:'#34D399'} },
+    { x:S, y:t0.buy, name:'매입', type:'bar', marker:{color:'#FF6B6B'} },
+    { x:S, y:t0.soc, name:'SOC', mode:'lines+markers', yaxis:'y2',
+      line:{color:'#E6E9EF', width:1.6}, marker:{size:4} },
+  ], baseLayout({ barmode:'relative',
+     yaxis2:{ overlaying:'y', side:'right', range:[0,1], showgrid:false } }), CFG);
+
+  // ── 인터랙션 ───────────────────────────────────────
+  // 탭 전환 (시간대별 매매)
+  document.querySelectorAll('.seg button').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      drawTrading(['naive','xgb','mpc'][i]);
+    });
+  });
+
+  // 클릭 리플 (실행 버튼 + 세그먼트)
+  function attachRipple(el){
+    el.addEventListener('click', e => {
+      const r = document.createElement('span'); r.className='ripple';
+      const rect = el.getBoundingClientRect(); const size = Math.max(rect.width, rect.height);
+      r.style.width = r.style.height = size+'px';
+      r.style.left = (e.clientX-rect.left-size/2)+'px';
+      r.style.top  = (e.clientY-rect.top-size/2)+'px';
+      el.appendChild(r); setTimeout(()=>r.remove(), 600);
+    });
+  }
+  document.querySelectorAll('.run-btn').forEach(attachRipple);
+
+  // KPI 카드 스태거 등장 + 숫자 카운트업
+  const kpis = document.querySelectorAll('.kpi');
+  kpis.forEach((k,i)=> setTimeout(()=>k.classList.add('in'), 80*i + 120));
+  function countUp(el, target, suffix, decimals){
+    const dur=900, t0=performance.now();
+    function tick(now){
+      const p = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-p,3);
+      el.firstChild.textContent = (target*e).toFixed(decimals);
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  setTimeout(()=>{
+    const vals = document.querySelectorAll('.kpi .k-val');
+    countUp(vals[0],12.4,'',1); countUp(vals[1],87.2,'',1);
+    countUp(vals[2],0.84,'',2); countUp(vals[3],3.21,'',2);
+  }, 350);
+
+  // 실행 버튼 → 짧은 로딩 후 KPI 재카운트 (데모)
+  document.querySelector('.run-btn').addEventListener('click', e=>{
+    const b=e.currentTarget; const txt=b.innerHTML;
+    b.innerHTML='⏳ 실행 중...'; b.style.pointerEvents='none';
+    setTimeout(()=>{ b.innerHTML=txt; b.style.pointerEvents='';
+      const vals=document.querySelectorAll('.kpi .k-val');
+      countUp(vals[0],12.4,'',1); countUp(vals[1],87.2,'',1);
+      countUp(vals[2],0.84,'',2); countUp(vals[3],3.21,'',2);
+    }, 900);
+  });
+</script>
+</body>
+</html>
