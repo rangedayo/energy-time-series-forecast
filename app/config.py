@@ -32,6 +32,21 @@ else:
     API_KEY = _DEFAULT_API_KEY
 
 
+# ── 운영 시뮬레이션(/simulate, /sim/meta) 설정 ──────────────────────────────
+# React 프론트엔드(app_frontend)가 호출하는 BFF 엔드포인트용.
+SIM_CSV_PATH = str(PROJECT_ROOT / "data" / "processed" / "national_train_features.csv")
+
+# run_mpc_simulation 이 내부에서 /predict_horizon 을 다시 HTTP 호출할 때 쓰는 자기 주소.
+SELF_BASE_URL = os.environ.get("SOLAR_SELF_URL", "http://localhost:8000")
+
+# CORS: Vite 개발 서버(기본 5173) 허용. 콤마 구분 env 로 덮어쓸 수 있다.
+_default_origins = "http://localhost:5173,http://127.0.0.1:5173"
+CORS_ORIGINS: list[str] = [
+    o.strip() for o in os.environ.get("SOLAR_CORS_ORIGINS", _default_origins).split(",")
+    if o.strip()
+]
+
+
 def _load_valid_regions() -> set[str]:
     with open(ENCODER_PATH, "rb") as f:
         encoder = pickle.load(f)

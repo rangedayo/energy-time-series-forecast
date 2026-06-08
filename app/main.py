@@ -11,9 +11,18 @@ import numpy as np
 import xgboost as xgb
 from fastapi import Depends, FastAPI
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.config import ENCODER_PATH, FEATURE_ORDER, MODEL_PATH
+from app.config import (
+    API_KEY,
+    CORS_ORIGINS,
+    ENCODER_PATH,
+    FEATURE_ORDER,
+    MODEL_PATH,
+    SELF_BASE_URL,
+    SIM_CSV_PATH,
+)
 from app.exceptions import (
     unhandled_exception_handler,
     validation_error_handler,
@@ -26,6 +35,7 @@ from app.inference import (
     predict_single,
 )
 from app.middleware import RequestLoggingMiddleware
+from app.operations import compute_sim_meta, to_jsonable
 from app.schemas import (
     BatchPredictionRequest,
     BatchPredictionResponse,
@@ -34,6 +44,7 @@ from app.schemas import (
     HorizonResponse,
     PredictionRequest,
     PredictionResponse,
+    SimulateRequest,
 )
 from app.security import verify_api_key
 
@@ -109,6 +120,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_middleware(RequestLoggingMiddleware)
 app.add_exception_handler(ValueError, value_error_handler)
 app.add_exception_handler(RequestValidationError, validation_error_handler)
@@ -254,3 +272,54 @@ async def predict_horizon_endpoint(
         horizon=request.horizon,
         predictions=predictions,
     )
+
+
+# ── 운영 시뮬레이션 BFF (React 프론트엔드용) ─────────────────────────────────
+@app.get(
+    "/sim/meta",
+    tags=["operation"],
+    summary="시뮬 입력 메타 (지역 목록 + 시작 시각 범위)",
+    description="프론트엔드 입력 패널 초기화용. 학습 CSV 기준 지역과 허용 범위. X-API-Key 필수.",
+    dependencies=[Depends(verify_api_key)],
+)
+async def sim_meta():
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, compute_sim_meta, SIM_CSV_PATH)
+
+
+@app.post(
+    "/simulate",
+    tags=["operation"],
+    summary="3개 정책 ESS 운영 시뮬레이션",
+    description=(
+        "(region, start_time, initial_soc) 입력으로 naive/xgb_lookahead/mpc_xgb "
+        "3개 정책을 24h 시뮬레이션하고 예측·실측·지표·시간별 결과를 반환한다. "
+        "내부적으로 /predict_horizon 을 재사용하므로 블로킹을 피하려 별도 스레드에서 "
+        "실행한다. X-API-Key 필수."
+    ),
+    dependencies=[Depends(verify_api_key)],
+)
+async def simulate(request: SimulateRequest):
+    # run_mpc_simulation 은 동기 + 내부에서 self HTTP(/predict_horizon) 호출.
+    # 이벤트 루프를 막으면 중첩 호출이 데드락되므로 executor 에서 돌린다.
+    loop = asyncio.get_event_loop()
+
+    def _run():
+        from app_streamlit.orchestrator import run_mpc_simulation
+
+        return run_mpc_simulation(
+            start_time=request.start_time,
+            region=request.region,
+            initial_soc=request.initial_soc,
+            api_base_url=SELF_BASE_URL,
+            api_key=API_KEY,
+            csv_path=SIM_CSV_PATH,
+        )
+
+    try:
+        result = await loop.run_in_executor(None, _run)
+    except ValueError as e:
+        return JSONResponse(status_code=422, content={"detail": str(e)})
+    except RuntimeError as e:
+        return JSONResponse(status_code=502, content={"detail": str(e)})
+    return JSONResponse(content=to_jsonable(result))

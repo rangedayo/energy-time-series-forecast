@@ -243,6 +243,34 @@ class HorizonRequest(BaseModel):
         return self
 
 
+class SimulateRequest(BaseModel):
+    """운영 시뮬레이션(/simulate) 요청. React 프론트엔드 입력 패널과 1:1 대응."""
+
+    region: str = Field(..., description="17개 시도 중 하나")
+    start_time: datetime = Field(..., description="시뮬 시작 시각 (ISO 8601)")
+    initial_soc: float = Field(
+        0.5, ge=0.0, le=1.0, description="배터리 시작 충전 상태 (0=공, 1=만충)"
+    )
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "region": "전라남도",
+                "start_time": "2022-06-15T09:00:00",
+                "initial_soc": 0.5,
+            }
+        }
+    )
+
+    @field_validator("region")
+    @classmethod
+    def _region_must_be_known(cls, v: str) -> str:
+        if v not in VALID_REGIONS:
+            allowed = ", ".join(REGION_LIST_SORTED)
+            raise ValueError(f"Unknown region {v!r}. Allowed regions: [{allowed}].")
+        return v
+
+
 class HorizonPrediction(BaseModel):
     timestamp: datetime
     predicted_power_mwh: float
