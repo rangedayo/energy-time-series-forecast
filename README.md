@@ -277,7 +277,7 @@ r = requests.post(
 
 - v1 : 17개 base learner 앙상블. XGBoost 단독 대비 통계적 유의 차 없음.
 - v2 : TFT, PatchTST 등 트랜스포머 계열 4개 추가 → **앙상블 가중치 0%**. known_covariates 의존성이 큰 단기 태양광 예측에서는 트리가 우위.
-- 시각화 : `outputs/archive/autogluon/autogluon_v2/autogluon_v2_leaderboard.png`, `autogluon_v2_vs_xgb_region.png`
+- 상세 : `outputs/autogluon_v1_v2_보고서.md` (리더보드·지역별 비교·시각화 정리)
 
 ### 분리 학습 실험 (전남 단독)
 

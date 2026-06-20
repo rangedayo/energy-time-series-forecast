@@ -27,6 +27,7 @@ reference_materials/
 CLAUDE.md
 claude_share/
 archive/
+outputs/archive/
 
 # ── 로그 / 백업 / 임시 파일 ─────────────────────────────
 *.log
