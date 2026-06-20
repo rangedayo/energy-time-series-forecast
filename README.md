@@ -93,7 +93,7 @@ flowchart TB
         D --> F["/predict_horizon (멀티스텝 1~48)"]
     end
 
-    subgraph UI["Streamlit 운영 도구"]
+    subgraph UI["React 운영 도구"]
         G[운영자 입력<br/>region · SOC · start_time] --> H[orchestrator]
         H -. HTTP 1회 .-> F
         F -. 예측 48개 .-> H
@@ -118,7 +118,7 @@ flowchart TB
 
 1. **학습 파이프라인** — 기상 6변수 + 시차, 이동평균 피처로 XGBoost 통합 모델을 학습합니다. 17개 지역을 한 모델이 region 인코딩으로 처리합니다.
 2. **예측을 API로 내보낸다** — 학습된 모델을 FastAPI로 감싸 `/predict`(단일 시점)와 `/predict_horizon`(1~48시간 멀티스텝)으로 분리합니다. 다른 클라이언트도 HTTP로 부를 수 있습니다.
-3. **예측으로 운영을 시뮬한다** — 운영자가 지역, SOC, 시작 시점을 고르면 Streamlit이 API에서 24시간 예측을 한 번에 받아 MPC LP 솔버로 최적 충방전을 풀고, 3개 정책 결과를 비교 그래프로 보여줍니다.
+3. **예측으로 운영을 시뮬한다** — 운영자가 지역, SOC, 시작 시점을 고르면 React 운영 화면이 API에서 24시간 예측을 한 번에 받아 MPC LP 솔버로 최적 충방전을 풀고, 3개 정책 결과를 비교 그래프로 보여줍니다.
 
 설계할 때 이렇게 나눈 이유:
 
@@ -179,11 +179,11 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 Swagger UI: `http://localhost:8000/docs`. 미설정 시 개발용 기본키 `dev-key-change-me`로 동작하며 startup에 경고 로그를 출력합니다.
 
-### Streamlit 운영 도구
+### React 운영 도구
 
 ```bash
 # (FastAPI 서버를 먼저 띄운 상태에서)
-streamlit run app_streamlit/app.py
+cd frontend && npm run dev   # http://localhost:5173
 ```
 
 ### 전체 학습 파이프라인 재생성
