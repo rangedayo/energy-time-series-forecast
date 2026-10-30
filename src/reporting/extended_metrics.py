@@ -12,7 +12,6 @@ _apply_font()
 import sys
 import json
 import datetime
-import shutil
 from pathlib import Path
 
 import numpy as np
@@ -27,7 +26,6 @@ TEST_FEATURES = Path("data/processed/national_test_features.csv")
 OUT_JSON  = Path("outputs/extended_metrics_results.json")
 OUT_MD    = Path("outputs/extended_metrics_report.md")
 OUT_PNG   = Path("outputs/extended_metrics_comparison.png")
-SHARE_DIR = Path("claude_share")
 
 # 평가 대상 모델 정의 — 모델 추가 시 여기에만 추가
 MODELS = {
@@ -321,16 +319,6 @@ def main():
 
     print(f"{ts()} 시각화 생성: {OUT_PNG}")
     plot_comparison(result, OUT_PNG)
-
-    print(f"{ts()} claude_share 복사 중...")
-    SHARE_DIR.mkdir(exist_ok=True)
-    for src, dst in [
-        (__file__,  SHARE_DIR / "extended_metrics.py"),
-        (OUT_JSON,  SHARE_DIR / "extended_metrics_results.json"),
-        (OUT_MD,    SHARE_DIR / "extended_metrics_report.md"),
-        (OUT_PNG,   SHARE_DIR / "extended_metrics_comparison.png"),
-    ]:
-        shutil.copy2(src, dst)
 
     print(f"\n{'='*60}")
     print("[평가 지표 확장 결과]")

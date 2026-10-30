@@ -12,7 +12,6 @@ LSTM 은 본 분석에서 제외한다.
 
 import sys
 import json
-import shutil
 import warnings
 from pathlib import Path
 from datetime import datetime
@@ -50,7 +49,6 @@ def ts():
 XGB_PREDICTIONS = "outputs/national_xgb_predictions.csv"
 OUT_JSON = Path("outputs/ess_v2_sensitivity_results.json")
 OUT_PNG = Path("outputs/ess_v2_sensitivity_curve.png")
-SHARE_DIR = Path("claude_share")
 
 NOISE_LEVELS = [0.0, 0.05, 0.10, 0.20, 0.30, 0.50, 0.75, 1.0, 1.5]
 RNG_SEEDS = [42, 123, 456]  # 견고성 확보
@@ -231,15 +229,6 @@ def main():
           f"자급률은 {half_gain:+.1f} pt 만 추가")
     print(f"→ 한계는 시뮬레이터 설계(그리디 단일스텝) 또는 ESS 용량 자체에 있음을 시사")
     print("=" * 64)
-
-    # ── claude_share 복사 ────────────────────────────────────────────────────
-    print(f"\n[{ts()}] claude_share 복사 중...")
-    SHARE_DIR.mkdir(exist_ok=True)
-    for src in (Path(__file__), OUT_JSON, OUT_PNG):
-        if src.exists():
-            dst = SHARE_DIR / src.name
-            shutil.copy2(src, dst)
-            print(f"   → {dst}")
 
     print(f"\n[{ts()}] [TASK G-5] 완료")
     return results

@@ -11,7 +11,6 @@ LSTM 은 본 분석에서 제외한다. XGBoost 단일 모델 + 합성 정책만
 import sys
 import time
 import json
-import shutil
 import warnings
 from pathlib import Path
 from datetime import datetime
@@ -60,7 +59,6 @@ OUT_JSON = Path("outputs/ess_v2_simulation_results.json")
 OUT_PNG_COMPARISON = Path("outputs/ess_v2_comparison.png")
 OUT_PNG_REGION = Path("outputs/ess_v2_region_breakdown.png")
 OUT_MD_TOU_BREAKDOWN = Path("outputs/ess_v2_tou_breakdown.md")
-SHARE_DIR = Path("claude_share")
 
 # 집계 대상 수치 지표 키
 METRIC_KEYS = [
@@ -860,16 +858,6 @@ def main():
     _write_tou_breakdown_md(national_sum, OUT_MD_TOU_BREAKDOWN)
     print(f"\n[{ts()}] TOU 분해 표 저장 → {OUT_MD_TOU_BREAKDOWN}")
     _verify_tou_breakdown(national_sum)
-
-    # ── claude_share 복사 ────────────────────────────────────────────────────
-    print(f"\n[{ts()}] claude_share 복사 중...")
-    SHARE_DIR.mkdir(exist_ok=True)
-    for src in (Path(__file__), OUT_JSON, OUT_PNG_COMPARISON, OUT_PNG_REGION,
-                OUT_MD_TOU_BREAKDOWN):
-        if src.exists():
-            dst = SHARE_DIR / src.name
-            shutil.copy2(src, dst)
-            print(f"   → {dst}")
 
     print(f"\n[{ts()}] [TASK G-3+G-4] 완료")
     return results

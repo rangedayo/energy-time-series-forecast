@@ -15,7 +15,6 @@ actual(실측) 기준으로 수행한다.
 """
 
 import sys
-import shutil
 from pathlib import Path
 from datetime import datetime
 
@@ -263,7 +262,6 @@ def policy_mpc_oracle(t, actual, predicted, soc, demand_t, params,
 
 
 # ── 검증 (__main__) ──────────────────────────────────────────────────────────
-SHARE_DIR = Path("claude_share")
 
 
 def _validate_targets(name, targets):
@@ -315,12 +313,6 @@ def _main():
     print(f"   ✓ 48개 시점 전부 (0.80, 0.20) 확인")
 
     print(f"\n[{ts()}] ✓ 5개 정책 전부 SOC 범위 검증 통과 (총 {checked}건)")
-
-    print(f"\n[{ts()}] claude_share 복사 중...")
-    SHARE_DIR.mkdir(exist_ok=True)
-    dst = SHARE_DIR / Path(__file__).name
-    shutil.copy2(__file__, dst)
-    print(f"   → {dst}")
 
     print(f"\n[{ts()}] [TASK G-2] 완료")
 

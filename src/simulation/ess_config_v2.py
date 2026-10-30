@@ -7,7 +7,6 @@ ESS 시뮬레이션 파라미터 (v2)
 """
 
 import sys
-import shutil
 from pathlib import Path
 from datetime import datetime
 
@@ -142,7 +141,6 @@ def get_tou_price_krw_per_mwh(month: int, hour: int) -> float:
 
 # ── 검증 출력 ─────────────────────────────────────────────────────────────────
 TRAIN_FEATURES = "data/processed/national_train_features.csv"
-SHARE_DIR = Path("claude_share")
 
 
 def _main():
@@ -181,13 +179,6 @@ def _main():
     load_mean = float(HOURLY_LOAD_FACTOR.mean())
     assert abs(load_mean - 1.0) < 0.01, f"부하 패턴 평균이 1.0 이 아님: {load_mean}"
     print(f"[{ts()}] ✓ 부하 패턴 평균 = {load_mean:.6f} (1.0 ± 0.01 통과)")
-
-    # claude_share 복사 (순수 모듈 — 자기 자신만)
-    print(f"\n[{ts()}] claude_share 복사 중...")
-    SHARE_DIR.mkdir(exist_ok=True)
-    dst = SHARE_DIR / Path(__file__).name
-    shutil.copy2(__file__, dst)
-    print(f"   → {dst}")
 
     print(f"\n[{ts()}] [TASK G-1] 완료")
 

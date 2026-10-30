@@ -10,7 +10,6 @@ XGBoost 단일 모델과 정책 비교에만 집중하며, 학습 단계의 다�
 
 import sys
 import json
-import shutil
 from pathlib import Path
 from datetime import datetime
 
@@ -26,7 +25,6 @@ SIM_JSON = Path("outputs/ess_v2_simulation_results.json")
 SENS_JSON = Path("outputs/ess_v2_sensitivity_results.json")
 XGB_JSON = Path("outputs/national_xgb_results.json")
 OUT_MD = Path("outputs/national_final_report_v2.md")
-SHARE_DIR = Path("claude_share")
 
 SCENARIO_ORDER = ["naive_baseline", "xgb_no_lookahead", "xgb_lookahead", "oracle"]
 
@@ -274,14 +272,6 @@ def main():
         f.write(md)
     section_count = md.count("\n## ")
     print(f"[{ts()}] 리포트 저장 → {OUT_MD} (섹션 {section_count}개)")
-
-    print(f"\n[{ts()}] claude_share 복사 중...")
-    SHARE_DIR.mkdir(exist_ok=True)
-    for src in (Path(__file__), OUT_MD):
-        if src.exists():
-            dst = SHARE_DIR / src.name
-            shutil.copy2(src, dst)
-            print(f"   → {dst}")
 
     print(f"\n[{ts()}] [TASK H] 완료 — 섹션 {section_count}개, LSTM 언급 0건")
 

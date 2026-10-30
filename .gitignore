@@ -25,7 +25,7 @@ wandb/
 # ── Claude Code 작업용 파일 (공개 제외) ─────────────────
 reference_materials/
 CLAUDE.md
-claude_share/
+AGENTS.md
 archive/
 outputs/archive/
 

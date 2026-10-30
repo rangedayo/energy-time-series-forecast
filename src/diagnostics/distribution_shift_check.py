@@ -10,7 +10,6 @@ _apply_font()
 import sys
 import json
 import datetime
-import shutil
 from pathlib import Path
 
 import numpy as np
@@ -27,7 +26,6 @@ OUT_MD = Path("outputs/distribution_shift_diagnosis.md")
 OUT_PNG_OVERALL = Path("outputs/distribution_shift_power_overall.png")
 OUT_PNG_JEONNAM = Path("outputs/distribution_shift_power_jeonnam.png")
 OUT_PNG_HOURLY = Path("outputs/distribution_shift_hourly.png")
-SHARE_DIR = Path("claude_share")
 
 FEATURES_OF_INTEREST = ["lag_1h", "일사량", "기온", "rolling_mean_3h"]
 TARGET = "power_mwh"
@@ -342,18 +340,6 @@ def main():
     print(f"{ts()} MD 보고서 저장: {OUT_MD}")
     md_text = build_md_report(result, regions)
     OUT_MD.write_text(md_text, encoding="utf-8")
-
-    print(f"{ts()} claude_share 복사 중...")
-    SHARE_DIR.mkdir(exist_ok=True)
-    for src, dst in [
-        (__file__, SHARE_DIR / "distribution_shift_check.py"),
-        (OUT_JSON, SHARE_DIR / "distribution_shift_diagnosis.json"),
-        (OUT_MD, SHARE_DIR / "distribution_shift_diagnosis.md"),
-        (OUT_PNG_OVERALL, SHARE_DIR / "distribution_shift_power_overall.png"),
-        (OUT_PNG_JEONNAM, SHARE_DIR / "distribution_shift_power_jeonnam.png"),
-        (OUT_PNG_HOURLY, SHARE_DIR / "distribution_shift_hourly.png"),
-    ]:
-        shutil.copy2(src, dst)
 
     print(f"\n{'='*60}")
     print(f"[작업 1 요약] 분포 차이 진단 결과")
