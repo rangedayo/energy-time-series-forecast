@@ -38,7 +38,7 @@ _POLICIES: dict[str, Any] = {
 
 _SIM_LENGTH = 24       # 운영자 화면이 보여줄 시뮬 길이
 _HORIZON = 48          # /predict_horizon 호출 시 사용
-_MPC_LP_HORIZON = 48   # mpc_xgb LP가 매 시점 보는 lookahead (round 2-2-pre PASS 근거)
+_MPC_LP_HORIZON = 24   # mpc_xgb LP가 매 시점 보는 lookahead (round 2-2-pre PASS 근거)
 
 
 def _json_default(obj: Any) -> Any:
