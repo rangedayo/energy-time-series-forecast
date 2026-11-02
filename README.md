@@ -189,7 +189,7 @@ cd frontend && npm run dev   # http://localhost:5173
 ### 전체 학습 파이프라인 재생성
 
 ```bash
-python preprocess_national.py
+python src/preprocessing/preprocess_national.py
 python src/features/feature_engineering_national.py
 python src/models/train_xgboost_national.py
 python -m src.simulation.ess_simulation_v2
